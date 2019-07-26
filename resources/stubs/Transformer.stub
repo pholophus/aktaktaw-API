@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Transformer;
+
+use App\Concerns\Formatter;
+use League\Fractal\TransformerAbstract;
+use App\Models\{{modelName}} as {{modelName}}Model;
+
+class {{modelName}}Transformer extends TransformerAbstract
+{
+    use Formatter;
+
+    public function transform({{modelName}}Model $branches)
+    {
+         return[
+            'id'=> ${{modelNamePluralLowerCase}}->uuid,
+            'code'=> ${{modelNamePluralLowerCase}}->code,
+            'name'=> ${{modelNamePluralLowerCase}}->name,
+            'is_active'=> isBoolean(${{modelNamePluralLowerCase}}->is_active) ,
+            'created_at'=> ${{modelNamePluralLowerCase}}->created_at->format('c'),
+            'updated_at'=> ${{modelNamePluralLowerCase}}->updated_at->format('c')
+        ];
+    }
+}

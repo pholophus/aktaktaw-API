@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Processors\{{modelName}};
+
+use Carbon\Carbon;
+use Request;
+use App\Processors\Processor;
+use App\Models\{{modelName}} as {{modelName}}Model;
+
+use App\Validators\{{modelName}} as Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Dingo\Api\Exception\StoreResourceFailedException as StoreFailed;
+use Dingo\Api\Exception\DeleteResourceFailedException as DeleteFailed;
+use Dingo\Api\Exception\ResourceException as ResourceFailed;
+use Dingo\Api\Exception\UpdateResourceFailedException as UpdateFailed;
+
+class {{modelName}}Processor extends Processor
+{
+    public function __construct(Validator $validator)
+    {
+        $this->validator = $validator;
+    }
+
+
+     public function index($listener)
+    {
+        try {
+            ${{modelNamePluralLowerCase}} =  {{modelName}}Model::paginate(15);
+        } catch(ModelNotFoundException $e) {
+            return $listener->{{modelNamePluralLowerCase}}DoesNotExistsError();
+        }
+        return $listener->show{{modelName}}Listing(${{modelNamePluralLowerCase}});
+    }
+
+    public function show($listener, ${{modelNameSingularLowerCase}}Uuid)
+    {
+
+        try {
+            ${{modelNameSingularLowerCase}} = {{modelName}}Model::where('uuid',${{modelNameSingularLowerCase}}Uuid)->firstorfail();
+        } catch(ModelNotFoundException $e) {
+            return $listener->{{modelNamePluralLowerCase}}DoesNotExistsError();
+        }
+
+        return $listener->show{{modelName}}(${{modelNameSingularLowerCase}});
+    }
+
+    public function store($listener, array $inputs)
+    {
+        //use validator when retrieving input
+        $validator = $this->validator->on('create')->with($inputs);
+        if ($validator->fails()) {
+            throw new StoreFailed('Could not create new {{modelNameSingularLowerCase}}.', $validator->errors());
+        }
+
+
+        ${{modelNameSingularLowerCase}} = {{modelName}}Model::create([
+            'title' =>  $inputs['title'] ,
+            'description' =>  $inputs['description'],
+        ]);
+
+        return setApiResponse('success','created','{{modelNameSingularLowerCase}}');
+    }
+
+    public function update($listener, ${{modelNameSingularLowerCase}}Uuid, array $inputs)
+    {
+        //use validator when retrieving input
+        $validator = $this->validator->on('update')->with($inputs);
+        if ($validator->fails()) {
+            throw new UpdateFailed('Could not update {{modelNameSingularLowerCase}}.', $validator->errors());
+        }
+        try {
+            ${{modelNameSingularLowerCase}} = {{modelName}}Model::where('uuid',${{modelNameSingularLowerCase}}Uuid)->firstorfail();
+        } catch(ModelNotFoundException $e) {
+            return $listener->{{modelNameSingularLowerCase}}DoesNotExistsError();
+        }
+
+
+        $update = ${{modelNameSingularLowerCase}}->update([
+            'title' =>  $inputs['title'] ,
+            'description' =>  $inputs['description'],
+            'start' =>  $inputs['start'],
+            'end' =>  $inputs['end'],
+            'assignor_id' => auth()->user()->id
+        ]);
+
+        return setApiResponse('success','updated','{{modelNameSingularLowerCase}}');
+    }
+
+    public function delete($listener,${{modelNameSingularLowerCase}}Uuid)
+    {
+        if(!${{modelNameSingularLowerCase}}Uuid){
+            throw new DeleteFailed('Could not delete {{modelNameSingularLowerCase}}.');
+        }
+
+        try {
+            ${{modelNameSingularLowerCase}} = {{modelName}}Model::where('uuid',${{modelNameSingularLowerCase}}Uuid)->firstorfail();
+        } catch(ModelNotFoundException $e) {
+            return $listener->{{modelNameSingularLowerCase}}DoesNotExistsError();
+        }
+        ${{modelNameSingularLowerCase}}->delete();
+
+
+        return setApiResponse('success','deleted','{{modelNameSingularLowerCase}}');
+    }
+}

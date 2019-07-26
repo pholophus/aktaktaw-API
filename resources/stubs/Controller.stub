@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Http\Controllers\{{modelNameSingularLowerCase}};
+
+use App\{{modelNameSingularLowerCase}};
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Collection;
+use App\Http\Transformers\{{modelName}}Transformer;
+use Dingo\Api\Exception\StoreResourceFailedException;
+use App\Processors\{{modelName}}\{{modelName}} as {{modelName}}Processor;
+
+class {{modelName}}Controller extends Controller
+{
+    /**
+    * Show all {{modelName}}
+    *
+    * Get a JSON representation of all the registered {{modelName}}.
+    *
+    * @Get("/")
+    */
+    public function index({{modelName}}Processor $processor){
+        return $processor->index($this);
+    }
+
+    /**
+    * Show certain record of {{modelName}}
+    *
+    * Get a certain record of JSON representation of certain the registered {{modelName}}.
+    *
+    * @Get("/{id_here}")
+    */
+    public function show($uuid,{{modelName}}Processor $processor){
+        return $processor->show($this,$uuid);
+    }
+
+    /**
+    * Store a record of {{modelName}}
+    *
+    * Store {{modelName}} Records.
+    *
+    * @Post("/")
+    */
+    public function store({{modelName}}Processor $processor){
+        return $processor->store($this, Input::all());
+    }
+
+    /**
+    * Update a record of {{modelName}}
+    *
+    * Update Selected {{modelName}} Records.
+    *
+    * @Put("/{id_here}")
+    */
+    public function update({{modelName}}Processor $processor,${{modelNameSingularLowerCase}}Uuid)
+    {
+        return $processor->update($this, ${{modelNameSingularLowerCase}}Uuid, Input::all());
+    }
+
+    /**
+    * Delete a record of {{modelName}}
+    *
+    * Delete selected {{modelName}} Records.
+    *
+    * @Delete("/{id_here}")
+    */
+    public function destroy({{modelName}}Processor $processor, ${{modelNameSingularLowerCase}}Uuid)
+    {
+        return $processor->delete($this, ${{modelNameSingularLowerCase}}Uuid);
+    }
+
+    public function show{{modelName}}Listing(${{modelNameSingularLowerCase}})
+    {
+        return $this->response->paginator(${{modelNameSingularLowerCase}}, new {{modelName}}Transformer);
+    }
+
+    public function show{{modelName}}(${{modelNameSingularLowerCase}})
+    {
+        return $this->response->item(${{modelNameSingularLowerCase}}, new {{modelName}}Transformer);
+    }
+
+    public function validationFailed($errors)
+    {
+        throw new StoreResourceFailedException('Create {{modelNameSingularLowerCase}} failed ,Missing Parameters', $errors);
+    }
+
+    public function {{modelNameSingularLowerCase}}DoesNotExistsError()
+    {
+        return $this->response->errorNotFound("{{modelNameSingularLowerCase}} does not exists");
+    }
+
+}
