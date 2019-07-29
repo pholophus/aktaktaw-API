@@ -15,24 +15,25 @@ class UserTransformer extends TransformerAbstract
         return [
             'id' => $user->uuid,
             'name' => $user->name,
-            'nickname' => $user->nickname ?? '',
+            // 'nickname' => $user->nickname ?? '',
             'email' => $user->email,
-            'phone_no' => $user->phone_no?? '',
-            'profile_image' => $user->image_url?? '',
+            // 'phone_no' => $user->phone_no ?? '',
+            // 'profile_image' => $user->image_url ?? '',
             'status' => $user->is_active,
             'roles' => $this->roles($user) ?? '',
-            'branches' => $this->branches($user) ?? '',
-            'groups' => $this->groups($user) ?? '',
-            'is_new' => isBoolean($user->is_new),
+            // 'branches' => $this->branches($user) ?? '',
+            // 'groups' => $this->groups($user) ?? '',
+            // 'is_new' => isBoolean($user->is_new),
             'created_at' => $user->created_at->format('c'),
             'updated_at' => $user->created_at->format('c'),
         ];
     }
 
-    public function branches(UserModel $user){
+    public function branches(UserModel $user)
+    {
         $branches = $user->branches;
         $item = [];
-        foreach($branches as $branch){
+        foreach ($branches as $branch) {
             $item[] = [
                 'id' => $branch->uuid,
                 'name' => $branch->name,
@@ -41,10 +42,11 @@ class UserTransformer extends TransformerAbstract
         }
         return $item;
     }
-    public function groups(UserModel $user){
+    public function groups(UserModel $user)
+    {
         $groups = $user->groups;
         $item = [];
-        foreach($groups as $group){
+        foreach ($groups as $group) {
             $item[] = [
                 'id' => $group->uuid,
                 'name' => $group->name,
@@ -53,10 +55,11 @@ class UserTransformer extends TransformerAbstract
         }
         return $item;
     }
-    public function roles(UserModel $user){
-        $items =[];
+    public function roles(UserModel $user)
+    {
+        $items = [];
         $roles = $user->roles()->get();
-        foreach($roles as $role){
+        foreach ($roles as $role) {
             array_push($items, [
                 'id' => $role->uuid,
                 'slug' => $role->slug,
@@ -65,5 +68,4 @@ class UserTransformer extends TransformerAbstract
         }
         return $items;
     }
-
 }

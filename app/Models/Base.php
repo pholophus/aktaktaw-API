@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use Nicolaslopezj\Searchable\SearchableTrait;
@@ -14,7 +14,7 @@ class Base extends Model implements Auditable
 
     public function findByUuid($uuid)
     {
-        return static::where('uuid', $uuid)->first();
+        return static::where('uuid', $uuid)->firstorfail();
     }
     public function findByHashid($hashid)
     {

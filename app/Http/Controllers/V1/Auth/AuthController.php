@@ -9,6 +9,7 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Processors\Auth\Authenticate as AuthProcessor;
 use App\Http\Transformers\AuthTransformer;
 use Illuminate\Support\Facades\Auth;
+
 class AuthController extends Controller
 {
     public function login(AuthProcessor $processor)
@@ -31,7 +32,8 @@ class AuthController extends Controller
 
 
 
-    public function accountAuthenticated($token){
+    public function accountAuthenticated($token)
+    {
         return $this->response->array(['data' => [
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -49,19 +51,21 @@ class AuthController extends Controller
         return $this->response->errorNotFound("Account does not exists");
     }
 
-    public function successMessage($type){
-        switch($type){
-            case 'updated' : $typeInfo = 'successfully update password';
-            break;
-            default : $typeInfo = 'Something missing.';
-            break;
+    public function successMessage($type)
+    {
+        switch ($type) {
+            case 'updated':
+                $typeInfo = 'successfully update password';
+                break;
+            default:
+                $typeInfo = 'Something missing.';
+                break;
         }
 
         $response = [
             "status" => "success",
             "message" => $typeInfo
         ];
-        return response()->json($response,200);
+        return response()->json($response, 200);
     }
-
 }

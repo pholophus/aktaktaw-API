@@ -67,7 +67,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Asia/Kuala_Lumpur'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -171,10 +172,18 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Dingo\Api\Provider\LaravelServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
+        CleaniqueCoders\LaravelHelper\LaravelHelperServiceProvider::class,
+        CleaniqueCoders\LaravelObservers\LaravelObserversServiceProvider::class,
+        CleaniqueCoders\MoneyWrapper\MoneyWrapperServiceProvider::class,
+        CleaniqueCoders\ArtisanMakers\ArtisanMakersServiceProvider::class,
+        OwenIt\Auditing\AuditingServiceProvider::class,
     ],
 
     /*
@@ -225,7 +234,12 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'LaravelHelper' => CleaniqueCoders\LaravelHelper\LaravelHelperFacade::class,
+        'LaravelObservers' => CleaniqueCoders\LaravelObservers\LaravelObserversFacade::class,
+        'MoneyWrapper' => CleaniqueCoders\MoneyWrapper\MoneyWrapperFacade::class,
+        'ArtisanMakers' => CleaniqueCoders\ArtisanMakers\ArtisanMakersFacade::class,
     ],
 
 ];

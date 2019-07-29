@@ -1,22 +1,43 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable
+use Nicolaslopezj\Searchable\SearchableTrait;
+class User extends Authenticatable implements JWTSubject
 {
+    use HasRoles;
     use Notifiable;
+    use SoftDeletes;
+    use SearchableTrait;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $guard_name = 'api';
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+    protected $searchable = [
+        'columns' => [
+            'users.name' => 10,
+            'users.nickname' => 8,
+            'users.email' => 8,
+            'users.phone_no' => 8,
+        ],
+    ];
     protected $fillable = [
-        'name', 'email', 'password',
+        'name','nickname', 'email', 'password','phone_no'
     ];
 
     /**

@@ -122,6 +122,11 @@ if (! function_exists('getMapMarker')) { //get array of branch
         }
     }
 }
+if (! function_exists('convertToMysqlDateTime')) { //get array of branch
+    function convertToMysqlDateTime($value) {
+       return date("Y-m-d H:i:s", strtotime($value));
+    }
+}
 
 if (! function_exists('getMapMarkerColor')) { //get customer type.
     function getMapMarkerColor($type) {
@@ -148,7 +153,33 @@ if (! function_exists('cleanPhoneNumber')) { //get customer type.
         return str_replace(["-", "–"], '', preg_replace('/[^A-Za-z0-9\-]/', '', $phoneNo));
     }
 }
+if (! function_exists('checkUserAccess')) { //get customer type.
+    function checkUserAccess($role) {
+        //if the user send multiple roles
+        if(is_array($role)){
+            if(auth()->user()->hasAnyRole($role)){
+                return true;
+            }
+        }
+        //if only send one role
+        if(auth()->user()->hasRole(strtolower($role))){
+            return true;
+        }
+        return false;
+    }
+}
+if (! function_exists('randomDateInRange')) { //get customer type.
+    function randomDateInRange($start_date, $end_date) {
+       $min = strtotime($start_date);
+        $max = strtotime($end_date);
 
+        // Generate random number using above bounds
+        $val = rand($min, $max);
+
+        // Convert back to desired date format
+        return date('Y-m-d', $val);
+    }
+}
 if (! function_exists('setApiResponse')) { //get customer type.
     function setApiResponse($category,$type=null,$param = null) {
         $info = [];
@@ -174,6 +205,8 @@ if (! function_exists('setApiResponse')) { //get customer type.
                 break;
                 case 'unfavourite' : $info = ['successfully unfavourite the newsboard',200];
                 break;
+                case 'message' : $info = ['successfully send the message',200];
+                break;
                 default : $info = ['Something missing.',404];
                 break;
             }
@@ -184,6 +217,8 @@ if (! function_exists('setApiResponse')) { //get customer type.
                 case 'updated' : $info = ['failed to update '.$param , 404];
                 break;
                 case 'deleted' : $info = ['failed to delete '.$param , 404] ;
+                break;
+                case 'access' : $info = ['you\'re not authorize to use this '.$param , 404] ;
                 break;
                 default : $info = ['Something missing.',404];
                 break;
