@@ -15,8 +15,8 @@ class BookingSeeder extends Seeder
         $origins = [
             'user',
             'admin',
-            ];
-        
+        ];
+
         $faker = \Faker\Factory::create('ms_MY');
         ini_set('memory_limit', '50G');
         \Eloquent::reguard();
@@ -25,18 +25,18 @@ class BookingSeeder extends Seeder
             for ($i = 0; $i < 10; $i++) {
                 $booking  = \App\Models\Booking::updateOrCreate([
                     'origin' => $origin,
-                    'booking_date' =>$faker->date(),
+                    'booking_date' => $faker->date(),
                     //'booking_time' =>$faker->time(),
                     //'call_duration' =>,
                     //'end_call' => ,
-                    'notes' => $faker->sentence(6,true),
+                    'notes' => $faker->sentence(6, true),
                     'language' => $faker->languageCode,
-                    'translator_id' => numberBetween($min = 1, $max = 100),
-                    'origin_id' => numberBetween($min = 1, $max = 100),
-                    'expertise_id' =>numberBetween($min = 1, $max = 100),
-                    'type_id'=> numberBetween($min = 1, $max = 100),
-                    'status_id' => numberBetween($min = 1, $max = 100),
-                ]);               
+                    'translator_id' => rand(1, 100),
+                    'origin_id' => rand(1, 100),
+                    'expertise_id' => rand(1, 100),
+                    'type_id' => rand(1, 100),
+                    'status_id' => rand(1, 100),
+                ]);
             }
         }
     }
