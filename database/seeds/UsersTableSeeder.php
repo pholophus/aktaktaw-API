@@ -23,18 +23,22 @@ class UsersTableSeeder extends Seeder
                 $name = $faker->name;
                 $temp = explode(' ', trim($name));
                 $nickname = $temp[0];
+                $role_id = \App\Models\Role::where('name',$role->name)->first()->uuid;
+                //$profile_id =
 
                 $user = \App\Models\User::updateOrCreate([
                     'email' =>  str_slug(strtolower($role->name), '_') . '_' . $i . '@example.com',
                 ], [
-                    'name' => $name,
                     'password' => bcrypt('secret'),
+                    'social_google_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
+                    'social_facebook_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
+                    //'role_id' => $role_id,
                 ]);
 
 
-                if (!$user->hasRole($role)) {
-                    $user->assignRole($role);
-                }
+                // if (!$user->hasRole($role)) {
+                //     $user->assignRole($role);
+                // }
             }
         }
     }

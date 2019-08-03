@@ -1,0 +1,54 @@
+<?php
+namespace App\Http\Controllers\V1\Booking;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Collection;
+use App\Http\Transformers\BookingTransformer;
+use Dingo\Api\Exception\StoreResourceFailedException;
+use App\Processors\Booking\Booking as BookingProcessor;
+
+class BookingController extends Controller
+{
+    public function index(BookingProcessor $processor){
+        return $processor->index($this);
+    }
+
+    public function show($uuid,BookingProcessor $processor){
+        return $processor->show($this,$uuid);
+    }
+    public function store(BookingProcessor $processor){
+        return $processor->store($this, Input::all());
+    }
+
+    public function update(BookingProcessor $processor,$bookingUuid)
+    {
+        return $processor->update($this, $bookingUuid, Input::all());
+    }
+
+    public function destroy(BookingProcessor $processor, $bookingUuid)
+    {
+        return $processor->delete($this, $bookingUuid);
+    }
+
+    public function showBookingListing($booking)
+    {
+        return $this->response->paginator($booking, new BookingTransformer);
+    }
+
+    public function showBooking($booking)
+    {
+        return $this->response->item($booking, new BookingTransformer);
+    }
+
+    public function validationFailed($errors)
+    {
+        throw new StoreResourceFailedException('Create booking failed ,Missing Parameters', $errors);
+    }
+
+    public function bookingDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("booking does not exists");
+    }
+
+}

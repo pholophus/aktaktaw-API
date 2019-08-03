@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Processors\User;
+namespace App\Processors\Profile;
 
 use Carbon\Carbon;
 use App\Models\User as UserModel;
@@ -35,20 +35,20 @@ class Profile extends Processor
         if ($validator->fails()) {
             throw new UpdateFailed('Could not update user', $validator->errors());
         }
-        $user = auth()->user();
+        $user = auth()->user()->profile();
         $user->update([
-            'name' =>  $inputs['name'] ,
-            'nickname' =>  $inputs['nickname'],
+            'first_name' =>  $inputs['first_name'] ,
+            'last_name' =>  $inputs['last_name'] ,
             'phone_no' => cleanPhoneNumber($inputs['phone_no']),
+            'resume_file_path' => $inputs['resume_file_path'] ,
         ]);
 
-        if(isset($inputs['image_url'])){
-            $user->image_url = $inputs['image_url'];
+        if(isset($inputs['avatar_file_path'])){
+            $user->image_url = $inputs['avatar_file_path'];    
             $user->save();
         }
-
-        if(isset($inputs['password'])){
-            $user->password = bcrypt($inputs['password']);
+        if(isset($inputs['resume_file_path'])){
+            $user->image_url = $inputs['resume_file_path'];    
             $user->save();
         }
 

@@ -50,5 +50,22 @@ $api->version('v1', function ($api) {
             $api->put('/{id}', 'RoleController@update');
             $api->delete('/{id}', 'RoleController@destroy');
         });
+
+         //Expertise/
+         $api->group(['prefix' => 'expertises', 'namespace' => 'Expertise'], function ($api) {
+            $api->get('/', 'ExpertiseController@index');
+            $api->get('/{id}', 'ExpertiseController@show');
+            $api->post('/', 'ExpertiseController@store');
+            $api->put('/{id}', 'ExpertiseController@update');
+            $api->delete('/{id}', 'ExpertiseController@destroy');
+        });
+         //Booking/
+         $api->group(['prefix' => 'bookings', 'namespace' => 'Booking'], function ($api) {
+            $api->get('/', 'BookingController@index');
+            $api->get('/{id}', 'BookingController@show');
+            $api->post('/', 'BookingController@store');
+            $api->put('/{id}', 'BookingController@update');
+            $api->delete('/{id}', 'BookingController@destroy');   
+        });
     });
 });

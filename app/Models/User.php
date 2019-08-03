@@ -30,14 +30,11 @@ class User extends Authenticatable implements JWTSubject
     }
     protected $searchable = [
         'columns' => [
-            'users.name' => 10,
-            'users.nickname' => 8,
             'users.email' => 8,
-            'users.phone_no' => 8,
         ],
     ];
     protected $fillable = [
-        'name','nickname', 'email', 'password','phone_no'
+        'email', 'password','social_google_id','social_facebook_id'
     ];
 
     /**
@@ -57,4 +54,22 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class, 'profile_id', 'id');
+    }
+    public function booking()
+    {
+        return $this->hasMany(Booking::class);
+    }
+    public function role(){
+        return $this->belongsToMany(Role::class);
+    }
+    public function expertise(){
+        return $this->belongsToMany(Expertise::class);
+    }
+    // public function type(){
+    //     return $this->belongsToMany(Type::class);
+    // }
 }

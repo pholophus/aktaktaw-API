@@ -13,12 +13,25 @@ class ProfileController extends Controller
 {
    
 
-    public function index(ProfileProcessor $processor){
-        return $processor->index($this);
-    }
+    // public function index(ProfileProcessor $processor){
+    //     return $processor->index($this);
+    // }
+
+    // public function search(UserProcessor $processor){
+    //     return $processor->search($this, Input::all());
+    // }
 
     public function showUserProfile($user){
         return $this->response->item($user, new ProfileTransformer);
+    }
+
+    // public function show($uuid,ProfileProcessor $processor){
+    //     return $processor->show($this,$uuid);
+    // }
+
+    public function update( UserProcessor $processor,$userUuid)
+    {
+        return $processor->update($this, $userUuid, Input::all());
     }
    
     public function validationFailed($errors)

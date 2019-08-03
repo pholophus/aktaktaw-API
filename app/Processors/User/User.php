@@ -66,12 +66,8 @@ class User extends Processor
             return $listener->accountExistsError();
         }
 
-
-
         // $password = randomPassword();
         $password = 'secret';
-
-
 
 
         if(is_array($inputs['role_id'])){
@@ -95,7 +91,7 @@ class User extends Processor
         $user = UserModel::updateorcreate([
             'email' => $inputs['email']
         ],[
-            'name' => $inputs['name'],
+            //'name' => $inputs['name'],
             'password'=>bcrypt($password)
         ]);
 
@@ -126,26 +122,23 @@ class User extends Processor
             return $listener->accountDoesNotExistsError();
         }
 
-        $user->update([
-            'name' =>  $inputs['name'] ,
-            'nickname' =>  $inputs['nickname'],
-            'phone_no' => cleanPhoneNumber($inputs['phone_no']),
-        ]);
+        // $user->update([
+        //     'name' =>  $inputs['name'] ,
+        // ]);
 
-        if(isset($inputs['is_active'])){
-            $user->is_active = $inputs['is_active'];
-            $user->save();
-        }
-        if(isset($inputs['image_url'])){
-            $user->image_url = $inputs['image_url'];
-            $user->save();
-        }
+        // if(isset($inputs['is_active'])){
+        //     $user->is_active = $inputs['is_active'];
+        //     $user->save();
+        // }
+        // if(isset($inputs['image_url'])){
+        //     $user->image_url = $inputs['image_url'];
+        //     $user->save();
+        // }
 
         if(isset($inputs['password'])){
             $user->password = bcrypt($inputs['password']);
             $user->save();
         }
-
 
         if(isset($inputs['role_id'])){
             if(is_array($inputs['role_id'])){
