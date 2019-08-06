@@ -18,13 +18,12 @@ class Profile extends Base
     ];
 
     protected $fillable = [
-        'first_name','last_name', 'phone_no','avatar_file_path','resume_file_path'
+        'first_name','last_name', 'phone_no','avatar_file_path','resume_file_path','user_id'
     ];
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+    public function user(){
+        return $this->hasOne(\App\Models\User::class,'user_id','id');
     }
     
 }

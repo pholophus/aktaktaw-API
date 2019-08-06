@@ -32,7 +32,6 @@ class Kernel
             // \App\Models\Group::class,
              \App\Models\Role::class,
              \App\Models\Booking::class,
-             \App\Models\Profile::class,
              \App\Models\Expertise::class,
             // \App\Models\Attachment::class,
             // \App\Models\Customer::class,

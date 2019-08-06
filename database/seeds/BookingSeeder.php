@@ -21,21 +21,23 @@ class BookingSeeder extends Seeder
         ini_set('memory_limit', '50G');
         \Eloquent::reguard();
         $this->command->info('Booking Seed');
+
+        $user = \App\Models\User::all()->count();
         foreach ($origins as $origin) {
             for ($i = 0; $i < 10; $i++) {
                 $booking  = \App\Models\Booking::updateOrCreate([
                     'origin' => $origin,
                     'booking_date' =>$faker->date(),
-                    //'booking_time' =>$faker->time(),
+                    'booking_time' =>$faker->time(),
                     //'call_duration' =>,
-                    //'end_call' => ,
+                    'end_call' => $faker->time(),
                     'notes' => $faker->sentence(6,true),
                     'language' => $faker->languageCode,
-                    'translator_id' => numberBetween($min = 1, $max = 100),
-                    'origin_id' => numberBetween($min = 1, $max = 100),
-                    'expertise_id' =>numberBetween($min = 1, $max = 100),
-                    'type_id'=> numberBetween($min = 1, $max = 100),
-                    'status_id' => numberBetween($min = 1, $max = 100),
+                    //'translator_id' => rand(1,100),
+                    'origin_id' => rand(1,$user),
+                    'expertise_id' =>rand(1,7),
+                    // 'type_id'=> rand(1,100),
+                    // 'status_id' => rand(1,100),
                 ]);               
             }
         }

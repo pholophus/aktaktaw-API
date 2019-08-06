@@ -16,7 +16,7 @@ class Booking extends Base
     // ];
 
     protected $fillable = [
-        'origin','booking_date','booking_time','end_call','notes','language'
+        'origin','booking_date','booking_time','end_call','notes','language','translator_id','origin_id','expertise_id','type_id','status_id'
     ];
 
     public function user(){

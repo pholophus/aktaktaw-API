@@ -33,14 +33,13 @@ $api->version('v1', function ($api) {
             $api->post('/', 'UserController@store');
             $api->put('/{id}', 'UserController@update');
             $api->delete('/{id}', 'UserController@destroy');
-
-            //user profile
-            $api->get('/profile/me', 'UserController@showProfile');
-            $api->put('/profile/update', 'UserController@updateProfile');
         });
 
+        $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
-
+            $api->get('/me', 'ProfileController@showProfile');
+            $api->put('/update', 'ProfileController@updateProfile');
+        });
 
         //Role/
         $api->group(['prefix' => 'role', 'namespace' => 'Role'], function ($api) {

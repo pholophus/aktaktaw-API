@@ -34,7 +34,7 @@ class User extends Authenticatable implements JWTSubject
         ],
     ];
     protected $fillable = [
-        'email', 'password','social_google_id','social_facebook_id'
+        'email', 'password','social_google_id','social_facebook_id','account_balance','user_id'
     ];
 
     /**
@@ -57,7 +57,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function profile()
     {
-        return $this->belongsTo(Profile::class, 'profile_id', 'id');
+        return $this->hasOne(\App\Models\Profile::class, 'user_id', 'id');
     }
     public function booking()
     {

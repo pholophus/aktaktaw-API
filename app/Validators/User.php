@@ -12,7 +12,7 @@ class User extends Validator
     {
         $this->rules['email'] = ['required'];
         //$this->rules['name'] = ['required'];
-        $this->rules['role_id'] = ['required'];
+        //$this->rules['role_id'] = ['required'];
     }
 
     public function onLogin()

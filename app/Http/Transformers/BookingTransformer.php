@@ -17,7 +17,7 @@ class BookingTransformer extends TransformerAbstract
             'origin' => $booking->origin,
             'booking_date' => $booking->booking_date ?? '',
             'booking_time' => $booking->booking_time ?? '',
-            'call_duration' => $booking->call_duration ?? '',
+            //'call_duration' => $booking->call_duration ?? '',
             'end_call' => $booking->end_call ?? '',  
             'notes' => $booking->notes ?? '',
             'language' => $booking->language ?? '',

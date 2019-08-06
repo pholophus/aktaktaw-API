@@ -21,7 +21,7 @@ class CreateBookingsTable extends Migration
             $table->date('booking_date')->nullable();
             $table->time('booking_time')->nullable();
            // $table->float('call_duration')->nullable();
-            $table->timestamp('end_call')->nullable();
+            $table->time('end_call')->nullable();
             $table->text('notes')->nullable();
             $table->string('language')->nullable();     
             $table->string('translator_id')->nullable();

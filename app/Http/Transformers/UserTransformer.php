@@ -14,15 +14,12 @@ class UserTransformer extends TransformerAbstract
     {
         return [
             'id' => $user->uuid,
-            //'name' => $user->name,
-            // 'nickname' => $user->nickname ?? '',
             'email' => $user->email,
-            // 'phone_no' => $user->phone_no ?? '',
-            // 'profile_image' => $user->image_url ?? '',
             'user_status_id' => $user->user_status_id ?? '',
             'translator_status_id' => $user->translator_status_id ?? '',
             'social_google_id' => $user->social_google_id ?? '',
             'social_facebook_id' => $user->social_facebook_id ?? '',
+            'profiles' => $user->profile,
             //'roles' => $this->roles($user) ?? '',
             // 'branches' => $this->branches($user) ?? '',
             // 'groups' => $this->groups($user) ?? '',
@@ -32,19 +29,7 @@ class UserTransformer extends TransformerAbstract
         ];
     }
 
-    // public function branches(UserModel $user)
-    // {
-    //     $branches = $user->branches;
-    //     $item = [];
-    //     foreach ($branches as $branch) {
-    //         $item[] = [
-    //             'id' => $branch->uuid,
-    //             'name' => $branch->name,
-    //             'code' => $branch->code
-    //         ];
-    //     }
-    //     return $item;
-    // }
+    
     // public function groups(UserModel $user)
     // {
     //     $groups = $user->groups;

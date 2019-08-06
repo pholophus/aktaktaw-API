@@ -16,11 +16,22 @@ class ExpertiseSeeder extends Seeder
         \Eloquent::reguard();
         $this->command->info('Expertise Seed');
 
-        for ($i = 0; $i < 10; $i++) {
-            $expertise  = \App\Models\Expertise::updateOrCreate([
-                'expertise_name' => $faker->jobTitle,
-                'slug' => str_slug($faker->jobTitle,'_'),
-            ]);               
+        $array = [
+            'Engineering',
+            'Medicine',
+            'Technology',
+            'Business',
+            'Fashion',
+            'Travels',
+            'Sports',
+            ];
+        foreach ($array as $arr) {
+            for ($i = 0; $i < 10; $i++) {
+                $expertise  = \App\Models\Expertise::updateOrCreate([
+                    'expertise_name' => $arr,
+                    'slug' => str_slug($arr,'_'),
+                ]);               
+            }
         }
     }
 }

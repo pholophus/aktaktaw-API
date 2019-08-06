@@ -10,8 +10,7 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Processors\Profile\Profile as ProfileProcessor;
 
 class ProfileController extends Controller
-{
-   
+{  
 
     // public function index(ProfileProcessor $processor){
     //     return $processor->index($this);
@@ -21,6 +20,14 @@ class ProfileController extends Controller
     //     return $processor->search($this, Input::all());
     // }
 
+    public function showProfile(ProfileProcessor $processor){
+        return $processor->show($this);
+    }
+
+    public function updateProfile(ProfileProcessor $processor){
+        return $processor->update($this,Input::all());
+    }
+
     public function showUserProfile($user){
         return $this->response->item($user, new ProfileTransformer);
     }
@@ -29,10 +36,6 @@ class ProfileController extends Controller
     //     return $processor->show($this,$uuid);
     // }
 
-    public function update( UserProcessor $processor,$userUuid)
-    {
-        return $processor->update($this, $userUuid, Input::all());
-    }
    
     public function validationFailed($errors)
     {

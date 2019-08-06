@@ -23,8 +23,7 @@ class UsersTableSeeder extends Seeder
                 $name = $faker->name;
                 $temp = explode(' ', trim($name));
                 $nickname = $temp[0];
-                $role_id = \App\Models\Role::where('name',$role->name)->first()->uuid;
-                //$profile_id =
+
 
                 $user = \App\Models\User::updateOrCreate([
                     'email' =>  str_slug(strtolower($role->name), '_') . '_' . $i . '@example.com',
@@ -32,13 +31,21 @@ class UsersTableSeeder extends Seeder
                     'password' => bcrypt('secret'),
                     'social_google_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
                     'social_facebook_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
-                    //'role_id' => $role_id,
                 ]);
 
 
-                // if (!$user->hasRole($role)) {
-                //     $user->assignRole($role);
-                // }
+                $userId = \App\Models\User::all()->count();
+
+                $profile = \App\Models\Profile::updateOrCreate([
+                    'first_name' => $faker->firstName,
+                    'last_name' => $faker->lastName,
+                    'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
+                    'avatar_file_path' => $faker->regexify('[A-Z0-9]') . '.jpg',
+                    'resume_file_path' => $faker->regexify('[A-Z0-9]') . '.pdf',
+                    'account_balance' => rand(1,20),
+                    'user_id' => $userId,
+                ]);   
+
             }
         }
     }
