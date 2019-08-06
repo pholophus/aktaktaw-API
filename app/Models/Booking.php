@@ -7,19 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Base
 {
     protected $table = 'bookings';
-
-    //this is to allow searching across models
-    // protected $searchable = [
-    //     'columns' => [
-    //         'bookings.origin' => 10,
-    //     ],
-    // ];
+    protected $guard_name = 'api';
 
     protected $fillable = [
-        'origin','booking_date','booking_time','end_call','notes','language','translator_id','origin_id','expertise_id','type_id','status_id'
+        'origin','booking_date','booking_time','end_call','notes','language','translator_id','origin_id','expertise_id','type_id','status_id'  
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
     // public function type()
@@ -37,6 +32,5 @@ class Booking extends Base
 
     //statuses
 
-    protected $guard_name = 'api';
-    
+
 }

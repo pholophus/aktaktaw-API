@@ -15,8 +15,8 @@ class BookingSeeder extends Seeder
         $origins = [
             'user',
             'admin',
-            ];
-        
+        ];
+
         $faker = \Faker\Factory::create('ms_MY');
         ini_set('memory_limit', '50G');
         \Eloquent::reguard();
