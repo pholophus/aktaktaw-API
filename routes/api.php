@@ -39,8 +39,14 @@ $api->version('v1', function ($api) {
             $api->put('/profile/update', 'UserController@updateProfile');
         });
 
-
-
+        $api->group(['prefix' => 'language', 'namespace' => 'LanguageUser'], function ($api) {
+            $api->get('/', 'LanguageUserController@index');
+            $api->get('/no-paginate', 'LanguageUserController@getWithoutPagination');
+            $api->get('/{id}', 'LanguageUserController@show');
+            $api->post('/', 'LanguageUserController@store');
+            $api->put('/{id}', 'LanguageUserController@update');
+            $api->delete('/{id}', 'LanguageUserController@destroy');
+        });
 
         //Role/
         $api->group(['prefix' => 'role', 'namespace' => 'Role'], function ($api) {
@@ -49,6 +55,13 @@ $api->version('v1', function ($api) {
             $api->post('/', 'RoleController@store');
             $api->put('/{id}', 'RoleController@update');
             $api->delete('/{id}', 'RoleController@destroy');
+        });
+
+        //Wallet
+        $api->group(['prefix' => 'Wallet', 'namespace' => 'Wallet'], function ($api) {
+            $api->post('/', 'WalletController@store');
+            $api->get('/', 'WalletController@show');
+            $api->put('/{id}', 'WalletController@update');
         });
     });
 });

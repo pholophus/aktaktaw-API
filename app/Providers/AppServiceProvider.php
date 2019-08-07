@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Console\Commands\ApiCrudGenerator;
+use Illuminate\Support\Facades\Schema; //NEW: Import Schema
+use App\Models\Notification;
+use App\Observers\NotificationObserver;
+
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,5 +31,10 @@ class AppServiceProvider extends ServiceProvider
         $this->commands([
            ApiCrudGenerator::class,
         ]);
+
+        Schema::defaultStringLength(191); //NEW: Increase StringLength
+        \App\Observers\Kernel::make()->observes();
+        //Notification::observe(NotificationObserver::class);
+
     }
 }
