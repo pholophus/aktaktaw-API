@@ -4,16 +4,18 @@ namespace App\Validators;
 
 use Orchestra\Support\Validator;
 
-class Role extends Validator
+class Expertise extends Validator
 {
     protected $rules = [];
 
     public function onCreate()
     {
-        $this->rules['name'] = ['required'];
+        $this->rules['expertise_name'] = ['required'];       
     }
+
     public function onUpdate()
     {
-        $this->rules['name'] = ['required'];
+        $this->rules['expertise_name'] = ['required'];
     }
+
 }

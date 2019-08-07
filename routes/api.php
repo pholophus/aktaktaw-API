@@ -33,14 +33,13 @@ $api->version('v1', function ($api) {
             $api->post('/', 'UserController@store');
             $api->put('/{id}', 'UserController@update');
             $api->delete('/{id}', 'UserController@destroy');
-
-            //user profile
-            $api->get('/profile/me', 'UserController@showProfile');
-            $api->put('/profile/update', 'UserController@updateProfile');
         });
 
+        $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
-
+            $api->get('/me', 'ProfileController@showProfile');
+            $api->put('/update', 'ProfileController@updateProfile');
+        });
 
         //Role/
         $api->group(['prefix' => 'role', 'namespace' => 'Role'], function ($api) {
@@ -49,6 +48,23 @@ $api->version('v1', function ($api) {
             $api->post('/', 'RoleController@store');
             $api->put('/{id}', 'RoleController@update');
             $api->delete('/{id}', 'RoleController@destroy');
+        });
+
+         //Expertise/
+         $api->group(['prefix' => 'expertises', 'namespace' => 'Expertise'], function ($api) {
+            $api->get('/', 'ExpertiseController@index');
+            $api->get('/{id}', 'ExpertiseController@show');
+            $api->post('/', 'ExpertiseController@store');
+            $api->put('/{id}', 'ExpertiseController@update');
+            $api->delete('/{id}', 'ExpertiseController@destroy');
+        });
+         //Booking/
+         $api->group(['prefix' => 'bookings', 'namespace' => 'Booking'], function ($api) {
+            $api->get('/', 'BookingController@index');
+            $api->get('/{id}', 'BookingController@show');
+            $api->post('/', 'BookingController@store');
+            $api->put('/{id}', 'BookingController@update');
+            $api->delete('/{id}', 'BookingController@destroy');   
         });
     });
 });
