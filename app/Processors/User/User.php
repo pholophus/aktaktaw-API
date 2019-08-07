@@ -5,7 +5,7 @@ namespace App\Processors\User;
 use Carbon\Carbon;
 use App\Models\User as UserModel;
 use App\Models\Role as RoleModel;
-
+use App\Models\Profile as ProfileModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Validators\User as Validator;
@@ -66,25 +66,21 @@ class User extends Processor
             return $listener->accountExistsError();
         }
 
-
-
         // $password = randomPassword();
         $password = 'secret';
 
 
-
-
-        if(is_array($inputs['role_id'])){
-            $roles= RoleModel::whereIn('uuid',$inputs['role_id'])->get();
-            if(!$roles){
-                return $listener->roleNotExists();
-            }
-        }else{
-            $role= RoleModel::where('uuid',$inputs['role_id'])->first();
-            if(!$role){
-                return $listener->roleNotExists();
-            }
-        }
+        // if(is_array($inputs['role_id'])){
+        //     $roles= RoleModel::whereIn('uuid',$inputs['role_id'])->get();
+        //     if(!$roles){
+        //         return $listener->roleNotExists();
+        //     }
+        // }else{
+        //     $role= RoleModel::where('uuid',$inputs['role_id'])->first();
+        //     if(!$role){
+        //         return $listener->roleNotExists();
+        //     }
+        // }
         //if user ada dalam deleted model. then restore
         $chekdeleteduser = UserModel::where('email',$inputs['email'])->withTrashed()->first();
         //if true, restore the user and update
@@ -95,18 +91,22 @@ class User extends Processor
         $user = UserModel::updateorcreate([
             'email' => $inputs['email']
         ],[
-            'name' => $inputs['name'],
+            //'name' => $inputs['name'],
             'password'=>bcrypt($password)
         ]);
 
+        $id= UserModel::where('email',$inputs['email'])->first()->id;
+        $profile = ProfileModel::updateorcreate([
+            'user_id' => $id,
+        ]);
 
 
-        if(is_array($inputs['role_id'])){
-            $user->assignRole($roles->pluck('name')->toArray());
-        }else{
+        // if(is_array($inputs['role_id'])){
+        //     $user->assignRole($roles->pluck('name')->toArray());
+        // }else{
 
-            $user->assignRole($role->name);
-        }
+        //     $user->assignRole($role->name);
+        // }
 
        return setApiResponse('success','created','user');
     }
@@ -126,43 +126,40 @@ class User extends Processor
             return $listener->accountDoesNotExistsError();
         }
 
-        $user->update([
-            'name' =>  $inputs['name'] ,
-            'nickname' =>  $inputs['nickname'],
-            'phone_no' => cleanPhoneNumber($inputs['phone_no']),
-        ]);
+        // $user->update([
+        //     'name' =>  $inputs['name'] ,
+        // ]);
 
-        if(isset($inputs['is_active'])){
-            $user->is_active = $inputs['is_active'];
-            $user->save();
-        }
-        if(isset($inputs['image_url'])){
-            $user->image_url = $inputs['image_url'];
-            $user->save();
-        }
+        // if(isset($inputs['is_active'])){
+        //     $user->is_active = $inputs['is_active'];
+        //     $user->save();
+        // }
+        // if(isset($inputs['image_url'])){
+        //     $user->image_url = $inputs['image_url'];
+        //     $user->save();
+        // }
 
         if(isset($inputs['password'])){
             $user->password = bcrypt($inputs['password']);
             $user->save();
         }
 
+        // if(isset($inputs['role_id'])){
+        //     if(is_array($inputs['role_id'])){
+        //         $roles= RoleModel::whereIn('uuid',$inputs['role_id'])->get();
+        //         if(!$roles){
+        //             return $listener->roleNotExists();
+        //         }
+        //         $user->syncRoles($roles->pluck('name')->toArray());
+        //     }else{
+        //         $role= RoleModel::where('uuid',$inputs['role_id'])->first();
+        //         if(!$role){
+        //             return $listener->roleNotExists();
+        //         }
+        //         $user->syncRoles($role->name);
+        //     }
 
-        if(isset($inputs['role_id'])){
-            if(is_array($inputs['role_id'])){
-                $roles= RoleModel::whereIn('uuid',$inputs['role_id'])->get();
-                if(!$roles){
-                    return $listener->roleNotExists();
-                }
-                $user->syncRoles($roles->pluck('name')->toArray());
-            }else{
-                $role= RoleModel::where('uuid',$inputs['role_id'])->first();
-                if(!$role){
-                    return $listener->roleNotExists();
-                }
-                $user->syncRoles($role->name);
-            }
-
-        }
+        // }
 
         return setApiResponse('success','updated','user');
     }
@@ -181,7 +178,11 @@ class User extends Processor
             return $listener->accountDoesNotExistsError();
         }
 
+        $userId= UserModel::where('uuid',$userUuid)->first()->id;
+        $profile= ProfileModel::where('user_id',$userId)->firstorfail();
+
         $user->delete();
+        $profile->delete();
 
         return setApiResponse('success','deleted','user');
     }

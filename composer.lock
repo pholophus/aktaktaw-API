@@ -2217,7 +2217,11 @@
                 "framework",
                 "laravel"
             ],
+<<<<<<< HEAD
             "time": "2019-07-30T14:08:47+00:00"
+=======
+            "time": "2019-07-16T14:05:28+00:00"
+>>>>>>> 137b88f314ffe5665433cc575093f897b984c199
         },
         {
             "name": "laravel/tinker",
@@ -8169,8 +8173,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library that provides collection, processing, and rendering functionality for PHP code coverage information.",

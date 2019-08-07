@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Processors\User\User as UserProcessor;
-use App\Processors\User\Profile as ProfileProcessor;
+//use App\Processors\User\Profile as ProfileProcessor;
 use App\Http\Transformers\UserTransformer;
 
 class UserController extends Controller
@@ -38,13 +38,13 @@ class UserController extends Controller
     }
 
     //profile
-    public function showProfile(ProfileProcessor $processor){
-        return $processor->index($this);
-    }
+    // public function showProfile(ProfileProcessor $processor){
+    //     return $processor->index($this);
+    // }
 
-    public function updateProfile(ProfileProcessor $processor){
-        return $processor->update($this,Input::all());
-    }
+    // public function updateProfile(ProfileProcessor $processor){
+    //     return $processor->update($this,Input::all());
+    // }
 
     public function showUserListing($user)
     {
@@ -67,10 +67,10 @@ class UserController extends Controller
     }
 
 
-    public function branchNotExists()
-    {
-        return $this->response->errorNotFound("Branch does not exists");
-    }
+    // public function branchNotExists()
+    // {
+    //     return $this->response->errorNotFound("Branch does not exists");
+    // }
 
     public function accountExistsError()
     {

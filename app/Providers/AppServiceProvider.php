@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Console\Commands\ApiCrudGenerator;
-use Illuminate\Support\Facades\Schema; //NEW: Import Schema
 use App\Models\Notification;
 use App\Observers\NotificationObserver;
 
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->loadViewsFrom(__DIR__.'/resources/stubs', 'CrudGenerator');
+        $this->loadViewsFrom(__DIR__ . '/resources/stubs', 'CrudGenerator');
     }
 
     /**
@@ -28,8 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
+        \App\Observers\Kernel::make()->observes();
         $this->commands([
-           ApiCrudGenerator::class,
+            ApiCrudGenerator::class,
         ]);
 
         Schema::defaultStringLength(191); //NEW: Increase StringLength

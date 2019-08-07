@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Processors\User;
+namespace App\Processors\Profile;
 
 use Carbon\Carbon;
 use App\Models\User as UserModel;
-
+use App\Models\Profile as ProfileModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Validators\User as Validator;
@@ -24,8 +24,12 @@ class Profile extends Processor
         $this->validator = $validator;
     }
 
-    public function index($listener){
-        return $listener->showUser(auth()->user());
+    public function show($listener){
+        // $userId= auth()->user()->id;
+
+        // $profile = ProfileModel::where('user_id',$userId)->firstorfail();
+
+        return $listener->showUserProfile(auth()->user());
     }
 
     public function update($listener, array $inputs)
@@ -35,20 +39,19 @@ class Profile extends Processor
         if ($validator->fails()) {
             throw new UpdateFailed('Could not update user', $validator->errors());
         }
-        $user = auth()->user();
+        $user = auth()->user()->profile();
         $user->update([
-            'name' =>  $inputs['name'] ,
-            'nickname' =>  $inputs['nickname'],
+            'first_name' =>  $inputs['first_name'] ,
+            'last_name' =>  $inputs['last_name'] ,
             'phone_no' => cleanPhoneNumber($inputs['phone_no']),
         ]);
 
-        if(isset($inputs['image_url'])){
-            $user->image_url = $inputs['image_url'];
+        if(isset($inputs['avatar_file_path'])){
+            $user->image_url = $inputs['avatar_file_path'];    
             $user->save();
         }
-
-        if(isset($inputs['password'])){
-            $user->password = bcrypt($inputs['password']);
+        if(isset($inputs['resume_file_path'])){
+            $user->image_url = $inputs['resume_file_path'];    
             $user->save();
         }
 

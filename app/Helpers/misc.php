@@ -185,11 +185,11 @@ if (! function_exists('setApiResponse')) { //get customer type.
         $info = [];
         if($category == 'success'){
             switch($type){
-                case 'created' : $info = ['successfully new create new '.$param,201];
+                case 'created' : $info = ['successfully created new '.$param,201];
                 break;
                 case 'updated' : $info = ['successfully update '.$param,200];
                 break;
-                case 'deleted' : $info = ['successfully delete '.$param,200];
+                case 'deleted' : $info = ['successfully delete '.$param,204 ];
                 break;
                 case 'comment' : $info = ['successfully create new comment',201];
                 break;

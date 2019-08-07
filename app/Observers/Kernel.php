@@ -29,6 +29,10 @@ class Kernel
             \App\Models\UserLanguage::class,
             \App\Models\Wallet::class,
             \App\Models\Notification::class,
+            \App\Models\Booking::class,
+            \App\Models\Profile::class,
+            \App\Models\Expertise::class,
+
         ],
     ];
 
