@@ -55,6 +55,13 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    public function UserLanguage(){
+        return $this->hasMany(User_Language::class);
+    }
+
+    public function Wallet(){
+        return $this->hasOne(User_Language::class);
+    }
     public function profile()
     {
         return $this->hasOne(\App\Models\Profile::class, 'user_id', 'id');

@@ -35,6 +35,13 @@ $api->version('v1', function ($api) {
             $api->delete('/{id}', 'UserController@destroy');
         });
 
+        $api->group(['prefix' => 'language', 'namespace' => 'LanguageUser'], function ($api) {
+            $api->get('/', 'LanguageUserController@index');
+            $api->get('/no-paginate', 'LanguageUserController@getWithoutPagination');
+            $api->get('/{id}', 'LanguageUserController@show');
+            $api->post('/', 'LanguageUserController@store');
+            $api->put('/{id}', 'LanguageUserController@update');
+            $api->delete('/{id}', 'LanguageUserController@destroy');
         $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
             $api->get('/me', 'ProfileController@showProfile');
@@ -50,6 +57,11 @@ $api->version('v1', function ($api) {
             $api->delete('/{id}', 'RoleController@destroy');
         });
 
+        //Wallet
+        $api->group(['prefix' => 'Wallet', 'namespace' => 'Wallet'], function ($api) {
+            $api->post('/', 'WalletController@store');
+            $api->get('/', 'WalletController@show');
+            $api->put('/{id}', 'WalletController@update');
          //Expertise/
          $api->group(['prefix' => 'expertises', 'namespace' => 'Expertise'], function ($api) {
             $api->get('/', 'ExpertiseController@index');
@@ -64,7 +76,7 @@ $api->version('v1', function ($api) {
             $api->get('/{id}', 'BookingController@show');
             $api->post('/', 'BookingController@store');
             $api->put('/{id}', 'BookingController@update');
-            $api->delete('/{id}', 'BookingController@destroy');   
+            $api->delete('/{id}', 'BookingController@destroy');
         });
     });
 });

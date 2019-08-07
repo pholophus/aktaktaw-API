@@ -48,10 +48,15 @@ class Role extends Processor
         RoleModel::updateOrcreate([
             'name' =>  $inputs['name'],
             'guard_name' => 'api',
+
+        ], [
+            'slug' =>  str_slug($inputs['name']),
+            'name_display' =>  str_slug($inputs['name'], '_'),
         ]);
 
         return setApiResponse('success', 'created', 'role');
     }
+
 
     public function update($listener, $roleUuid, array $inputs)
     {
