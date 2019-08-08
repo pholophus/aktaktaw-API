@@ -71,8 +71,8 @@ class Booking extends Processor
 
     public function update($listener, $bookingUuid, array $inputs)
     {
-        if (!checkUserAccess('management'))
-            return setApiResponse('error', 'access');
+        // if (!checkUserAccess('management'))
+        //     return setApiResponse('error', 'access');
         //use validator when retrieving input
         $validator = $this->validator->on('update')->with($inputs);
         if ($validator->fails()) {
@@ -86,8 +86,12 @@ class Booking extends Processor
 
 
         $booking->update([
-            'code' =>  $inputs['code'],
-            'name' =>  $inputs['name']
+            'origin' =>  $inputs['origin'],
+            'booking_date' =>  $inputs['booking_date'],
+            'booking_time' =>  $inputs['booking_time'],
+            'end_call' =>  $inputs['end_call'],
+            'notes' =>  $inputs['notes'],
+            'language' =>  $inputs['language']
         ]);
         return setApiResponse('success', 'updated', 'booking');
     }

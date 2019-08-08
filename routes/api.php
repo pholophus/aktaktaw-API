@@ -7,12 +7,11 @@ use Illuminate\Http\Request;
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
+    
     //route that doesnt needed token
     $api->group(['namespace' => 'App\Http\Controllers\V1'], function ($api) {
         $api->post('auth/login', 'Auth\AuthController@login');
     });
-
-
 
     //guarded route
     $api->group(['middleware' => ['jwt.verify'], 'namespace' => 'App\Http\Controllers\V1'], function ($api) {
@@ -27,7 +26,6 @@ $api->version('v1', function ($api) {
         //user management
         $api->group(['prefix' => 'users', 'namespace' => 'User'], function ($api) {
             $api->post('/search', 'UserController@search');
-
             $api->get('/', 'UserController@index');
             $api->get('/{id}', 'UserController@show');
             $api->post('/', 'UserController@store');
@@ -42,6 +40,8 @@ $api->version('v1', function ($api) {
             $api->post('/', 'LanguageUserController@store');
             $api->put('/{id}', 'LanguageUserController@update');
             $api->delete('/{id}', 'LanguageUserController@destroy');
+        });
+
         $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
             $api->get('/me', 'ProfileController@showProfile');
@@ -62,6 +62,7 @@ $api->version('v1', function ($api) {
             $api->post('/', 'WalletController@store');
             $api->get('/', 'WalletController@show');
             $api->put('/{id}', 'WalletController@update');
+        });
          //Expertise/
          $api->group(['prefix' => 'expertises', 'namespace' => 'Expertise'], function ($api) {
             $api->get('/', 'ExpertiseController@index');
@@ -70,6 +71,7 @@ $api->version('v1', function ($api) {
             $api->put('/{id}', 'ExpertiseController@update');
             $api->delete('/{id}', 'ExpertiseController@destroy');
         });
+        
          //Booking/
          $api->group(['prefix' => 'bookings', 'namespace' => 'Booking'], function ($api) {
             $api->get('/', 'BookingController@index');

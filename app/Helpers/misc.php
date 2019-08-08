@@ -189,7 +189,7 @@ if (! function_exists('setApiResponse')) { //get customer type.
                 break;
                 case 'updated' : $info = ['successfully update '.$param,200];
                 break;
-                case 'deleted' : $info = ['successfully delete '.$param,204 ];
+                case 'deleted' : $info = ['successfully delete '.$param,200 ];
                 break;
                 case 'comment' : $info = ['successfully create new comment',201];
                 break;
