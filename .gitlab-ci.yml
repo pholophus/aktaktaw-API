@@ -6,7 +6,7 @@ deploy:
   stage: deploy
   script:
     - mkdir -p ~/.ssh
-    - echo "$LGEACRM_PRIVATE_KEY" >> ~/.ssh/id_dsa
+    - echo "$ASSISTOR_PRIVATE_KEY" >> ~/.ssh/id_dsa
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - >
@@ -15,7 +15,6 @@ deploy:
       git pull;
       php artisan migrate --force;
       php artisan config:clear;
-      composer dump;
-      vendor/bin/phpunit --testdox;'
+      composer dump;'
   only:
     - master
