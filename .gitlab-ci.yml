@@ -1,0 +1,21 @@
+stages:
+  - deploy
+
+deploy:
+  image: gotechnies/alpine-ssh
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$LGEACRM_PRIVATE_KEY" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - >
+      ssh ubuntu@ec2-18-136-107-205.ap-southeast-1.compute.amazonaws.com'
+      cd /var/www/assistor/;
+      git pull;
+      php artisan migrate --force;
+      php artisan config:clear;
+      composer dump;
+      vendor/bin/phpunit --testdox;'
+  only:
+    - master
