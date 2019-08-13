@@ -11,6 +11,8 @@ $api->version('v1', function ($api) {
     //route that doesnt needed token
     $api->group(['namespace' => 'App\Http\Controllers\V1'], function ($api) {
         $api->post('auth/login', 'Auth\AuthController@login');
+        $api->post('users', 'User\UserController@store');
+
     });
 
     //guarded route
@@ -28,7 +30,6 @@ $api->version('v1', function ($api) {
             $api->post('/search', 'UserController@search');
             $api->get('/', 'UserController@index');
             $api->get('/{id}', 'UserController@show');
-            $api->post('/', 'UserController@store');
             $api->put('/{id}', 'UserController@update');
             $api->delete('/{id}', 'UserController@destroy');
         });
@@ -58,9 +59,9 @@ $api->version('v1', function ($api) {
         });
 
         //Wallet
-        $api->group(['prefix' => 'Wallet', 'namespace' => 'Wallet'], function ($api) {
+        $api->group(['prefix' => 'wallet', 'namespace' => 'Wallet'], function ($api) {
             $api->post('/', 'WalletController@store');
-            $api->get('/', 'WalletController@show');
+            $api->get('/{id}', 'WalletController@show');
             $api->put('/{id}', 'WalletController@update');
         });
          //Expertise/
@@ -80,5 +81,6 @@ $api->version('v1', function ($api) {
             $api->put('/{id}', 'BookingController@update');
             $api->delete('/{id}', 'BookingController@destroy');
         });
+
     });
 });
