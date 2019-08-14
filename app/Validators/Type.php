@@ -4,7 +4,7 @@ namespace App\Validators;
 
 use Orchestra\Support\Validator;
 
-class Language_User extends Validator
+class Type extends Validator
 {
     protected $rules = [];
 

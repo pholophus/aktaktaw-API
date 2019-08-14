@@ -22,51 +22,66 @@ class Wallet extends Processor
         $this->validator = $validator;
     }
 
-    public function show($listener)
-    {
-        $id = auth()->user()->id;
-        try {
-            $Wallet = WalletModel::where('user_id', $id)->firstorfail();
-        } catch (ModelNotFoundException $e) {
-            return $listener->walletDoesNotExistError();
-        }
-        return $listener->showWallet($Wallet);
+    public function index($listener){
+        // if(!checkUserAccess('management'))
+        //     return setApiResponse('error','access');
+
+        $wallet = WalletModel::latest()->paginate(15);
+        return $listener->showWalletListing($wallet);
     }
 
-    public function store($listener, array $inputs)
-    {
-        /*if (!checkUserAccess('management'))
-            return setApiResponse('error', 'access');*/
-        $validator = $this->validator->on('create')->with($inputs);
-        if ($validator->fails()) {
-            return $listener->validationFailed($validator->getMessageBag());
-        }
 
-        $userID = auth()->user()->id;
-        WalletModel::create([
-            'amount' => $inputs['amount'],
-            'user_id' => $userID,
-        ]);
+    // public function show($listener,$walletUuid)
+    // {
 
-        return setApiResponse('success', 'created', 'Wallet created');
+    //     if(!$walletUuid){
+    //         return $listener->walletDoesNotExistsError();
+    //     }
+    //     try {
+    //         $wallet = WalletModel::where('uuid',$walletUuid)->firstorfail();
+    //     } catch(ModelNotFoundException $e) {
+    //         return $listener->walletDoesNotExistsError();
+    //     }
+    //     return $listener->showWallet($wallet);
+    // }
 
+    // public function update($listener, $walletUuid, array $inputs){
+    //     $validator = $this->validator->on('update')->with($inputs);
+    //     if ($validator->fails()) {
+    //         throw new UpdateFailed('Could not update wallet', $validator->errors());
+    //     }
+    //     try {
+    //         $wallet = WalletModel::where('uuid', $walletUuid)->firstorfail();
+    //     } catch (ModelNotFoundException $e) {
+    //         return $listener->walletDoesNotExistsError();
+    //     }
+
+    //     $wallet->update([
+    //         'amount' => $inputs['amount'],
+    //     ]);
+
+    //     return setApiResponse('success', 'updated', 'wallet');
+    // }
+
+    // user wallet
+
+    public function showUserWallet($listener){
+
+        return $listener->showWallet(auth()->user());
     }
 
-    public function update($listener, $id, array $inputs){
-        $validator = $this->validator->on('topup')->with($inputs);
+    public function updateUserWallet($listener, array $inputs)
+    {
+        //use validator when retrieving input
+        $validator = $this->validator->on('update')->with($inputs);
         if ($validator->fails()) {
-            throw new UpdateFailed('Amount required', $validator->errors());
+            throw new UpdateFailed('Could not update wallet', $validator->errors());
         }
-        try {
-            $wallet = WalletModel::where('user_id', $id)->firstorfail();
-        } catch (ModelNotFoundException $e) {
-            return $listener->walletDoesNotExistsError();
-        }
-
-        $wallet->update([
-            'amount' => $inputs['amount'],
+        $user = auth()->user();
+        $user->update([
+            'amount' =>  $inputs['amount'],
         ]);
 
-        return setApiResponse('success', 'update successful', 'wallet');
+        return setApiResponse('success','updated','wallet');
     }
 }

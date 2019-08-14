@@ -27,11 +27,11 @@ class Kernel
             \App\Models\Base::class,
             \App\Models\Type::class,
             \App\Models\UserLanguage::class,
-            \App\Models\Wallet::class,
             \App\Models\Notification::class,
             \App\Models\Booking::class,
             \App\Models\Profile::class,
             \App\Models\Expertise::class,
+            \App\Models\Wallet::class,
 
         ],
     ];

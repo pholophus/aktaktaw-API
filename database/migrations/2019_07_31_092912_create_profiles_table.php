@@ -21,7 +21,7 @@ class CreateProfilesTable extends Migration
             $table->string('phone_no')->nullable();
             $table->longText('avatar_file_path')->nullable();
             $table->longText('resume_file_path')->nullable();
-            $table->integer('account_balance')->nullable();
+            $table->integer('wallet_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->timestamps();
             $table->softDeletes();

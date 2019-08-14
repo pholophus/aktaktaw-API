@@ -42,7 +42,7 @@ class LanguageUserController extends Controller
 
     public function showLanguageUserListing($LanguageUser)
     {
-        return $this->response->collection($LanguageUser, new LanguageUserTransformer);
+        return $this->response->paginator($LanguageUser, new LanguageUserTransformer);
     }
 
     public function showLanguageUserListingNoPaginate($LanguageUser)
@@ -59,5 +59,10 @@ class LanguageUserController extends Controller
     {
         return $this->response->errorNotFound("LanguageUser does not exists");
     }
+    public function TypeDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("Type does not exists");
+    }
+
 
 }

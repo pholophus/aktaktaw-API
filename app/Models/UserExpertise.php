@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class UserLanguage extends Base
+class UserExpertise extends Base
 {
-    protected $table = 'user_languages';
+    protected $table = 'user_expertise';
 
-    protected $guarded = [
-        'id',
-        'uuid'
+    protected $fillable = [
+        'user_id',
+        'expertise_id'
     ];
 
     public function user(){

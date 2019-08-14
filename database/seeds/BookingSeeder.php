@@ -22,7 +22,7 @@ class BookingSeeder extends Seeder
         \Eloquent::reguard();
         $this->command->info('Booking Seed');
 
-        $user = \App\Models\User::all()->count();
+        $users = \App\Models\User::all();
         foreach ($origins as $origin) {
             for ($i = 0; $i < 10; $i++) {
                 $booking  = \App\Models\Booking::updateOrCreate([
@@ -34,7 +34,7 @@ class BookingSeeder extends Seeder
                     'notes' => $faker->sentence(6,true),
                     'language' => $faker->languageCode,
                     //'translator_id' => rand(1,100),
-                    'origin_id' => rand(1,$user),
+                    'origin_id' => mt_rand(1,$users->count()),
                     'expertise_id' =>rand(1,7),
                     // 'type_id'=> rand(1,100),
                     // 'status_id' => rand(1,100),

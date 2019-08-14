@@ -12,7 +12,6 @@ $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers\V1'], function ($api) {
         $api->post('auth/login', 'Auth\AuthController@login');
         $api->post('users', 'User\UserController@store');
-
     });
 
     //guarded route
@@ -36,7 +35,7 @@ $api->version('v1', function ($api) {
 
         $api->group(['prefix' => 'language', 'namespace' => 'LanguageUser'], function ($api) {
             $api->get('/', 'LanguageUserController@index');
-            $api->get('/no-paginate', 'LanguageUserController@getWithoutPagination');
+            //$api->get('/no-paginate', 'LanguageUserController@getWithoutPagination');
             $api->get('/{id}', 'LanguageUserController@show');
             $api->post('/', 'LanguageUserController@store');
             $api->put('/{id}', 'LanguageUserController@update');
@@ -60,9 +59,14 @@ $api->version('v1', function ($api) {
 
         //Wallet
         $api->group(['prefix' => 'wallet', 'namespace' => 'Wallet'], function ($api) {
-            $api->post('/', 'WalletController@store');
-            $api->get('/{id}', 'WalletController@show');
-            $api->put('/{id}', 'WalletController@update');
+            $api->get('/', 'WalletController@index');
+            // $api->get('/{id}', 'WalletController@show');
+            // $api->put('/{id}', 'WalletController@update');
+
+            //user wallet
+
+            $api->get('/me', 'WalletController@showUserWallet');
+            $api->put('/update', 'WalletController@updateUserWallet');
         });
          //Expertise/
          $api->group(['prefix' => 'expertises', 'namespace' => 'Expertise'], function ($api) {
@@ -82,5 +86,13 @@ $api->version('v1', function ($api) {
             $api->delete('/{id}', 'BookingController@destroy');
         });
 
+        //Type/
+        $api->group(['prefix' => 'types', 'namespace' => 'Type'], function ($api) {
+            $api->get('/', 'TypeController@index');
+            $api->get('/{id}', 'TypeController@show');
+            $api->post('/', 'TypeController@store');
+            $api->put('/{id}', 'TypeController@update');
+            $api->delete('/{id}', 'TypeController@destroy');
+        });
     });
 });

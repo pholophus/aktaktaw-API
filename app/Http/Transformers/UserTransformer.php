@@ -19,8 +19,8 @@ class UserTransformer extends TransformerAbstract
             'translator_status_id' => $user->translator_status_id ?? '',
             'social_google_id' => $user->social_google_id ?? '',
             'social_facebook_id' => $user->social_facebook_id ?? '',
-            'profiles' => $user->profile,
-            //'roles' => $this->roles($user) ?? '',
+            'profiles' =>  $this->profile($user) ?? '',
+            'roles' => $this->roles($user) ?? '',
             // 'branches' => $this->branches($user) ?? '',
             // 'groups' => $this->groups($user) ?? '',
             // 'is_new' => isBoolean($user->is_new),
@@ -30,30 +30,39 @@ class UserTransformer extends TransformerAbstract
     }
 
     
-    // public function groups(UserModel $user)
-    // {
-    //     $groups = $user->groups;
-    //     $item = [];
-    //     foreach ($groups as $group) {
-    //         $item[] = [
-    //             'id' => $group->uuid,
-    //             'name' => $group->name,
-    //             'slug' => $group->slug
-    //         ];
-    //     }
-    //     return $item;
-    // }
-    // public function roles(UserModel $user)
-    // {
-    //     $items = [];
-    //     $roles = $user->roles()->get();
-    //     foreach ($roles as $role) {
-    //         array_push($items, [
-    //             'id' => $role->uuid,
-    //             'slug' => $role->slug,
-    //             'name' => $role->name
-    //         ]);
-    //     }
-    //     return $items;
-    // }
+    public function profile(UserModel $user)
+    {
+        $item[] = [
+            'first_name' => $user->profile->first_name ?? '',
+            'last_name' => $user->profile->last_name ?? '',
+            'phone_no' => $user->profile->phone_no ?? '',
+            'avatar_file_path' => $user->profile->avatar_file_path ?? '',
+            'resume_file_path' => $user->profile->resume_file_path ?? '',
+            'wallet' => $this->wallet($user) ?? '',
+        ];
+        return $item;
+    }
+
+    public function wallet(UserModel $user)
+    {
+        $item[] = [
+            'id' => $user->wallet->uuid,
+            'amount' => $user->wallet->amount,
+        ];
+        return $item;
+    }
+
+    public function roles(UserModel $user)
+    {
+        $items = [];
+        $roles = $user->roles()->get();
+        foreach ($roles as $role) {
+            array_push($items, [
+                'id' => $role->uuid,
+                'slug' => $role->slug,
+                'name' => $role->name
+            ]);
+        }
+        return $items;
+    }
 }

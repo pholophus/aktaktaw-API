@@ -28,13 +28,13 @@ class Notification extends Processor
         //use validator when retrieving input
         $validator = $this->validator->on('create')->with($inputs);
         if ($validator->fails()) {
-            throw new StoreFailed('Could not sent notifications', $validator->errors());
+            throw new StoreFailed('Could not send notifications', $validator->errors());
         }
 
         NotificationModel::create([
             'user_id' => auth()->user()->id,
-            'notification_title' =>  $inputs['notification_title'],
-            'notification_description' =>  $inputs['notification_description'], //global , personal, group
+            'title' =>  $inputs['title'],
+            'description' =>  $inputs['description'], //global , personal, group
         ]);
 
         return $listener->successful();

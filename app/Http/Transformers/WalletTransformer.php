@@ -15,8 +15,8 @@ class WalletTransformer extends TransformerAbstract
         return [
             'id' => $wallet->uuid,
             'amount' => $wallet->amount,
-            'wallet type' => $wallet->wallet_type,
-            'wallet status' => $wallet->wallet_status,
+            'type' => $wallet->type,
+            'status' => $wallet->status,
             'created_at' => $wallet->created_at->format('c'),
             'updated_at' => $wallet->created_at->format('c'),
         ];

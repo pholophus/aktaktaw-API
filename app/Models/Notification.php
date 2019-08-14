@@ -9,8 +9,8 @@ class Notification extends Base
     protected $table = "notifications";
 
     protected $fillable = [
-        'notification_title',
-        'notification_description',
+        'title',
+        'description',
         'order_id',
         'user_id'
     ];
@@ -20,13 +20,13 @@ class Notification extends Base
             'notifications.type' => 8,
         ],
     ];
-    public function assignee()
-    {
-        return $this->belongsTo('App\Models\User', 'assignee_id', 'id');
-    }
+    // public function assignee()
+    // {
+    //     return $this->belongsTo('App\Models\User', 'assignee_id', 'id');
+    // }
 
-    public function assignor()
-    {
-        return $this->belongsTo('App\Models\User', 'assignor_id', 'id');
-    }
+    // public function assignor()
+    // {
+    //     return $this->belongsTo('App\Models\User', 'assignor_id', 'id');
+    // }
 }

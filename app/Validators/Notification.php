@@ -11,8 +11,8 @@ class Notification extends Validator
     public function onCreate()
     {
         //$this->rules['user_id'] = ['required'];
-        $this->rules['notification_title'] = ['required'];
-        $this->rules['notification_description'] = ['required'];
+        $this->rules['title'] = ['required'];
+        $this->rules['description'] = ['required'];
     }
 
 }

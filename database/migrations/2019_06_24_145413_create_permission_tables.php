@@ -28,6 +28,8 @@ class CreatePermissionTables extends Migration
             $table->string('uuid');
             $table->string('name');
             $table->string('guard_name');
+            $table->string('slug')->nullable();
+            $table->string('name_display')->nullable();
             $table->timestamps();
         });
 
