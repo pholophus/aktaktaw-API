@@ -31,11 +31,6 @@ class ProfileController extends Controller
     public function showUserProfile($user){
         return $this->response->item($user, new ProfileTransformer);
     }
-
-    // public function show($uuid,ProfileProcessor $processor){
-    //     return $processor->show($this,$uuid);
-    // }
-
    
     public function validationFailed($errors)
     {

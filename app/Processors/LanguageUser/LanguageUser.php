@@ -25,20 +25,23 @@ class LanguageUser extends Processor
 
     public function index($listener){
         // if(!checkUserAccess('management'))
-        //     return setApiResponse('error','access');
-        $User = auth()->user()->id;
-        $Language = new LanguageUserModel;
-        $LanguageUser = $Language->where('user_id','=',$User)->get();
+        // //     return setApiResponse('error','access');
+        // $User = auth()->user()->id;
+        // $Language = new LanguageUserModel;
+        // $LanguageUser = $Language->where('user_id','=',$User)->get();
+        // return $listener->showLanguageUserListing($LanguageUser);
+
+        $LanguageUser = LanguageUserModel::paginate(15);
         return $listener->showLanguageUserListing($LanguageUser);
     }
 
-    public function getWithoutPagination($listener)
-    {
-        $User = auth('api')->id;
-        $Language = new LanguageUserModel;
-        $LanguageUser = $Language->where('user_id','=',$User)->all();
-        return $listener->showLanguageUserListingNoPaginate($LanguageUser);
-    }
+    // public function getWithoutPagination($listener)
+    // {
+    //     $User = auth('api')->id;
+    //     $Language = new LanguageUserModel;
+    //     $LanguageUser = $Language->where('user_id','=',$User)->all();
+    //     return $listener->showLanguageUserListingNoPaginate($LanguageUser);
+    // }
 
     public function store($listener, array $inputs)
     {
@@ -49,10 +52,22 @@ class LanguageUser extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        $type = TypeModel::create([
-            'name' => $inputs['name'],
-            'category' => $inputs['category'],
-        ]);
+        // $type = TypeModel::create([
+        //     'name' => $inputs['name'],
+        //     'category' => $inputs['category'],
+        // ]);
+
+        if(is_array($inputs['type_id'])){
+            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
+            if(!$types){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }else{
+            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
+            if(!$type){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }
 
         $User = auth()->user()->id;
         LanguageUserModel::create([
@@ -62,7 +77,7 @@ class LanguageUser extends Processor
             'type_id' => $type->id,
         ]);
 
-        return setApiResponse('success', 'created', 'LanguageUser created');
+        return setApiResponse('success', 'created', 'LanguageUser');
 
     }
 
@@ -72,9 +87,10 @@ class LanguageUser extends Processor
             return $listener->LanguageUserDoesNotExistsError();
         }
         try {
-            $User = auth()->user()->id;
-            $Language = new LanguageUserModel;
-            $LanguageUser = $Language->where('uuid','=',$uuid)->where('user_id','=',$User)->firstorfail();
+            // $User = auth()->user()->id;
+            // $Language = new LanguageUserModel;
+            // $LanguageUser = $Language->where('uuid','=',$uuid)->where('user_id','=',$User)->firstorfail();
+            $LanguageUser = LanguageUserModel::where('uuid', $uuid)->firstorfail();
         } catch (ModelNotFoundException $e) {
             return $listener->LanguageUserDoesNotExistsError();
         }
@@ -91,11 +107,24 @@ class LanguageUser extends Processor
             throw new UpdateFailed('Could not update LanguageUser', $validator->errors());
         }
         try {
-            $User = auth()->user()->id;
-            $Language = new LanguageUserModel;
-            $LanguageUser = $Language->where('uuid', $uuid)->where('user_id','=',$User)->firstorfail();
+             $User = auth()->user()->id;
+            // $Language = new LanguageUserModel;
+            // $LanguageUser = $Language->where('uuid', $uuid)->where('user_id','=',$User)->firstorfail();
+            $LanguageUser = LanguageUserModel::where('uuid', $uuid)->firstorfail();
         } catch (ModelNotFoundException $e) {
             return $listener->LanguageUserDoesNotExistsError();
+        }
+
+        if(is_array($inputs['type_id'])){
+            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
+            if(!$types){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }else{
+            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
+            if(!$type){
+                return $listener->TypeDoesNotExistsError();
+            }
         }
 
         $LanguageUser->update([
@@ -103,13 +132,13 @@ class LanguageUser extends Processor
             'language_code' => $inputs['language_code'],
         ]);
 
-        $type = new TypeModel;
-        $TypeID = $Language->where('uuid', $uuid)->value('type_id');
+        // $type = new TypeModel;
+        // $TypeID = $Language->where('uuid', $uuid)->value('type_id');
 
-        $type->where('id','=',$TypeID)->update([
-            'name' => $inputs['name'],
-            'category' => $inputs['category'],
-        ]);
+        // $type->where('id','=',$TypeID)->update([
+        //     'name' => $inputs['name'],
+        //     'category' => $inputs['category'],
+        // ]);
 
         return setApiResponse('success', 'updated', 'LanguageUser');
     }
@@ -121,17 +150,17 @@ class LanguageUser extends Processor
         }
 
         try {
-            $User = auth()->user()->id;
-            $Language = new LanguageUserModel;
-            $LanguageUser = $Language->where('uuid', $uuid)->where('user_id','=',$User)->firstorfail();
+            $language = LanguageUserModel::where('uuid', $uuid)->firstorfail();
         } catch (ModelNotFoundException $e) {
             return $listener->LanguageUserDoesNotExistsError();
         }
-        $Type= new TypeModel;
+        // $Type= new TypeModel;
 
-        $LanguageUser->delete();
-        $typeID = $Language->where('uuid','=',$uuid)->value('type_id');
-        $Type->where('id','=',$typeID)->delete();
+        // $LanguageUser->delete();
+        // $typeID = $Language->where('uuid','=',$uuid)->value('type_id');
+        // $Type->where('id','=',$typeID)->delete();
+
+        $language->delete();
 
         return setApiResponse('success', 'deleted', 'LanguageUser deleted');
     }

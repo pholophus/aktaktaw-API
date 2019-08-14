@@ -13,16 +13,25 @@ class ProfileTransformer extends TransformerAbstract
     public function transform(UserModel $user)
     {
         return [
-            'id' => $user->profile->id ?? '',
+            'id' => $user->uuid ?? '',
             'first_name' => $user->profile->first_name ?? '',
             'last_name' => $user->profile->last_name ?? '',
             'phone_no' => $user->profile->phone_no ?? '',
             'avatar_file_path' => $user->profile->avatar_file_path ?? '',
             'resume_file_path' => $user->profile->resume_file_path ?? '',
-            'account_balance' => $user->profile->account_balance  ?? '',
+            'wallet' => $this->wallet($user) ?? '',
             'created_at' => $user->profile->created_at->format('c'),
             'updated_at' => $user->profile->created_at->format('c'),
         ];
+    }
 
+    public function wallet(UserModel $user)
+    {
+        $item[] = [
+            'id' => $user->wallet->uuid,
+            'amount' => $user->wallet->amount,
+        ];
+        return $item;
     }
 }
+

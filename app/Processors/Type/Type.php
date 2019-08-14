@@ -4,7 +4,7 @@ namespace App\Processors\Type;
 
 use Carbon\Carbon;
 use App\Models\Type as TypeModel;
-use App\Models\Language_User as Language_UserModel;
+use App\Models\UserLanguage as Language_UserModel;
 
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
@@ -23,6 +23,11 @@ class Type extends Processor
         $this->validator = $validator;
     }
 
+    public function index($listener){
+        $type = TypeModel::latest()->paginate(15);
+        return $listener->showTypeListing($type);
+    }
+
     public function store($listener, array $inputs)
     {
         $validator = $this->validator->on('create')->with($inputs);
@@ -35,14 +40,14 @@ class Type extends Processor
             'category' => $inputs['category'],
         ]);
 
-        $User = auth('api')->id;
-        $Language = new Language_UserModel;
-        $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
-            ->update([
-            'id' => $id,
-        ]);
+        // $User = auth()->user()->id;
+        // $Language = new Language_UserModel;
+        // $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
+        //     ->update([
+        //     'id' => $id,
+        // ]);
 
-        return setApiResponse('success', 'created', 'type added');
+        return setApiResponse('success', 'created', 'type');
 
     }
 
@@ -52,10 +57,12 @@ class Type extends Processor
             return $listener->TypeDoesNotExistsError();
         }
         try {
-            $User = auth('api')->id;
-            $Language = new TypeModel;
-            $Type = $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
-            ->firstorfail();
+            // $User = auth('api')->id;
+            // $Language = new TypeModel;
+            // $Type = $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
+            // ->firstorfail();
+            $Type = TypeModel::where('uuid',$uuid)->firstorfail();
+
         } catch (ModelNotFoundException $e) {
             return $listener->TypeDoesNotExistsError();
         }
@@ -72,22 +79,28 @@ class Type extends Processor
             throw new UpdateFailed('Could not update language', $validator->errors());
         }
         try {
-            $User = auth('api')->id;
-            $Language = new TypeModel;
-            $Type = $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
-            ->firstorfail();
+            // $User = auth('api')->id;
+            // $Language = new TypeModel;
+            // $Type = $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
+            // ->firstorfail();
+            $Type = TypeModel::where('uuid',$uuid)->firstorfail();
         } catch (ModelNotFoundException $e) {
             return $listener->TypeDoesNotExistsError();
         }
 
-        $User = auth('api')->id;
-        $Language = new TypeModel;
-        $Language->where('user_id','=',$User)->where('uuid','=',$uuid)->update([
-            'language_name' => $inputs['language_name'],
-            'language_code' => $inputs['language_code'],
+        // $User = auth('api')->id;
+        // $Language = new TypeModel;
+        // $Language->where('user_id','=',$User)->where('uuid','=',$uuid)->update([
+        //     'language_name' => $inputs['language_name'],
+        //     'language_code' => $inputs['language_code'],
+        // ]);
+
+        $Type->update([
+            'name' => $inputs['name'],
+            'category' => $inputs['category'],
         ]);
 
-        return setApiResponse('success', 'updated', 'Language');
+        return setApiResponse('success', 'updated', 'type');
     }
 
     public function delete($listener, $uuid)
@@ -97,10 +110,11 @@ class Type extends Processor
         }
 
         try {
-            $User = auth('api')->id;
-            $Language = new TypeModel;
-            $Type = $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
-            ->firstorfail();
+            // $User = auth('api')->id;
+            // $Language = new TypeModel;
+            // $Type = $Language->where('user_id','=',$User)->where('uuid','=',$uuid)
+            // ->firstorfail();
+            $Type = TypeModel::where('uuid',$uuid)->firstorfail();
         } catch (ModelNotFoundException $e) {
             return $listener->TypeDoesNotExistsError();
         }

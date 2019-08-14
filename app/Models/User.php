@@ -34,7 +34,7 @@ class User extends Authenticatable implements JWTSubject
         ],
     ];
     protected $fillable = [
-        'email', 'password','social_google_id','social_facebook_id','account_balance','user_id'
+        'email', 'password','social_google_id','social_facebook_id','wallet_id','user_id'
     ];
 
     /**
@@ -59,8 +59,8 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(User_Language::class);
     }
 
-    public function Wallet(){
-        return $this->hasOne(User_Language::class);
+    public function wallet(){
+        return $this->hasOne(Wallet::class);
     }
     public function profile()
     {

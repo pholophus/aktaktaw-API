@@ -18,8 +18,8 @@ class CreateNotificationsTable extends Migration
             $table->string('uuid')->index();
             $table->integer('order_id')->nullable();
             $table->integer('user_id')->nullable();
-            $table->string('notification_title')->nullable();
-            $table->string('notification_description')->nullable();
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

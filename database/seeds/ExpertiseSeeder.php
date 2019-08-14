@@ -30,7 +30,7 @@ class ExpertiseSeeder extends Seeder
                 $expertise  = \App\Models\Expertise::updateOrCreate([
                     'expertise_name' => $arr,
                     'slug' => str_slug($arr,'_'),
-                ]);               
+                ]);
             }
         }
     }

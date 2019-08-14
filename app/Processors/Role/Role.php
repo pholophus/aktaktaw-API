@@ -73,7 +73,7 @@ class Role extends Processor
 
 
         $role->update([
-            'code' =>  $inputs['code'],
+            //'code' =>  $inputs['code'],
             'name' =>  $inputs['name'],
             'slug' =>  str_slug($inputs['name']),
             'name_display' =>  str_slug($inputs['name'], '_')

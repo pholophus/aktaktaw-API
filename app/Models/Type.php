@@ -8,7 +8,10 @@ class Type extends Model
 {
     protected $table = 'types';
 
-    protected $guarded = [
+    // protected $guarded = [
+    // ];
+    protected $fillable = [ 
+        'name','category'
     ];
 
     public function UserLanguage(){
