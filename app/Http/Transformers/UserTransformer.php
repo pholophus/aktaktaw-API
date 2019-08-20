@@ -21,7 +21,6 @@ class UserTransformer extends TransformerAbstract
             'social_facebook_id' => $user->social_facebook_id ?? '',
             'profiles' =>  $this->profile($user) ?? '',
             'wallet' => $this->wallet($user) ?? '',
-            'roles' => $this->roles($user) ?? '',
             // 'branches' => $this->branches($user) ?? '',
             // 'groups' => $this->groups($user) ?? '',
             // 'is_new' => isBoolean($user->is_new),
@@ -40,6 +39,7 @@ class UserTransformer extends TransformerAbstract
             'phone_no' => $profile->phone_no ?? '',
             'avatar_file_path' => $profile->avatar_file_path ?? '',
             'resume_file_path' => $profile->resume_file_path ?? '',
+            'roles' => $this->roles($user) ?? '',
         ];
         return $item;
     }
