@@ -13,6 +13,12 @@ class Wallet extends Model
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->hasOne(\App\Models\User::class,'user_id','id');
     }
+
+
+    // public function user(){
+    //     return $this->belongsTo(User::class);
+    // }
+
 }

@@ -43,9 +43,9 @@ class Expertise extends Processor
         }
 
         ExpertiseModel::updateOrcreate([
-            'expertise_name' =>  $inputs['expertise_name'],
+            'name' =>  $inputs['name'],
         ],[
-            'slug'=>  str_slug($inputs['expertise_name']),
+            'slug'=>  str_slug($inputs['name']),
         ]);
 
         return setApiResponse('success','created','expertise');
@@ -66,8 +66,8 @@ class Expertise extends Processor
 
 
         $expertise->update([
-            'expertise_name' =>  $inputs['expertise_name'],
-            'slug'=>  str_slug($inputs['expertise_name'])
+            'name' =>  $inputs['name'],
+            'slug'=>  str_slug($inputs['name'])
         ]);
 
         return setApiResponse('success','updated','expertise');

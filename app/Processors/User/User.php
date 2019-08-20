@@ -102,6 +102,10 @@ class User extends Processor
 
         //     $user->assignRole($role->name);
         // }
+        $role = \App\Models\Role::where('name','general user')->first();
+        if(! $user->hasRole($role)) {
+            $user->assignRole($role);
+        }
 
        return setApiResponse('success','created','user');
     }

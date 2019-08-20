@@ -22,13 +22,13 @@ class Wallet extends Processor
         $this->validator = $validator;
     }
 
-    public function index($listener){
-        // if(!checkUserAccess('management'))
-        //     return setApiResponse('error','access');
+    // public function index($listener){
+    //     // if(!checkUserAccess('management'))
+    //     //     return setApiResponse('error','access');
 
-        $wallet = WalletModel::latest()->paginate(15);
-        return $listener->showWalletListing($wallet);
-    }
+    //     $wallet = WalletModel::latest()->paginate(15);
+    //     return $listener->showWalletListing($wallet);
+    // }
 
 
     // public function show($listener,$walletUuid)
@@ -67,6 +67,8 @@ class Wallet extends Processor
 
     public function showUserWallet($listener){
 
+        //->profile()->wallet()
+
         return $listener->showWallet(auth()->user());
     }
 
@@ -77,8 +79,9 @@ class Wallet extends Processor
         if ($validator->fails()) {
             throw new UpdateFailed('Could not update wallet', $validator->errors());
         }
-        $user = auth()->user();
-        $user->update([
+        //->profile()->wallet()
+        $wallet = auth()->user()->wallet();
+        $wallet->update([
             'amount' =>  $inputs['amount'],
         ]);
 

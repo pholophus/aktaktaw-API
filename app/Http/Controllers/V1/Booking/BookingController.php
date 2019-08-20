@@ -51,4 +51,16 @@ class BookingController extends Controller
         return $this->response->errorNotFound("booking does not exists");
     }
 
+    public function TypeDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("Type does not exists");
+    }
+
+    public function ExpertiseDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("expertise does not exists");
+    }
+
+
+
 }

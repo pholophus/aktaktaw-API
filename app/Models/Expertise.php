@@ -11,12 +11,12 @@ class Expertise extends Base
     //this is to allow searching across models
     protected $searchable = [
         'columns' => [
-            'expertises.expertise_name' => 10,
+            'expertises.name' => 10,
         ],
     ];
 
     protected $fillable = [
-        'expertise_name','slug'
+        'name','slug'
     ];
 
     public function user(){

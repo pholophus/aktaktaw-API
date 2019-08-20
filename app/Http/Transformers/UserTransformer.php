@@ -20,6 +20,7 @@ class UserTransformer extends TransformerAbstract
             'social_google_id' => $user->social_google_id ?? '',
             'social_facebook_id' => $user->social_facebook_id ?? '',
             'profiles' =>  $this->profile($user) ?? '',
+            'wallet' => $this->wallet($user) ?? '',
             'roles' => $this->roles($user) ?? '',
             // 'branches' => $this->branches($user) ?? '',
             // 'groups' => $this->groups($user) ?? '',
@@ -32,22 +33,23 @@ class UserTransformer extends TransformerAbstract
     
     public function profile(UserModel $user)
     {
+        $profile = $user->profile;
         $item[] = [
-            'first_name' => $user->profile->first_name ?? '',
-            'last_name' => $user->profile->last_name ?? '',
-            'phone_no' => $user->profile->phone_no ?? '',
-            'avatar_file_path' => $user->profile->avatar_file_path ?? '',
-            'resume_file_path' => $user->profile->resume_file_path ?? '',
-            'wallet' => $this->wallet($user) ?? '',
+            'first_name' => $profile->first_name ?? '',
+            'last_name' => $profile->last_name ?? '',
+            'phone_no' => $profile->phone_no ?? '',
+            'avatar_file_path' => $profile->avatar_file_path ?? '',
+            'resume_file_path' => $profile->resume_file_path ?? '',
         ];
         return $item;
     }
 
     public function wallet(UserModel $user)
     {
+        $wallet = $user->wallet;
         $item[] = [
-            'id' => $user->wallet->uuid,
-            'amount' => $user->wallet->amount,
+            //'user_id' => $user->uuid,
+            'amount' => $wallet->amount,
         ];
         return $item;
     }

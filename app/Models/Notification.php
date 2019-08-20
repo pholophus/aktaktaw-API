@@ -11,19 +11,20 @@ class Notification extends Base
     protected $fillable = [
         'title',
         'description',
-        'order_id',
+        'booking_id',
         'user_id'
     ];
     protected $searchable = [
         'columns' => [
-            'notifications.message' => 10,
+            'notifications.title' => 10,
             'notifications.type' => 8,
         ],
     ];
-    // public function assignee()
-    // {
-    //     return $this->belongsTo('App\Models\User', 'assignee_id', 'id');
-    // }
+    
+    public function booking()
+    {
+        return $this->belongsTo(App\Models\Booking::class, 'booking_id', 'id');
+    }
 
     // public function assignor()
     // {

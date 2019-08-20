@@ -14,7 +14,7 @@ class ExpertiseTransformer extends TransformerAbstract
     {
         return [
             'id' => $expertise->uuid,
-            'expertise_name' => $expertise->expertise_name,
+            'name' => $expertise->name,
             'created_at' => $expertise->created_at->format('c'),
             'updated_at' => $expertise->created_at->format('c'),
         ];

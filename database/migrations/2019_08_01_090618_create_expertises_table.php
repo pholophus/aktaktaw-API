@@ -16,7 +16,7 @@ class CreateExpertisesTable extends Migration
         Schema::create('expertises', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid')->nullable()->index();
-            $table->string('expertise_name')->nullable();
+            $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->timestamps();
             $table->softDeletes();
