@@ -11,9 +11,9 @@ use App\Processors\Wallet\Wallet as WalletProcessor;
 
 class WalletController extends Controller
 {
-    public function index(WalletProcessor $processor){
-        return $processor->index($this);
-    }
+    // public function index(WalletProcessor $processor){
+    //     return $processor->index($this);
+    // }
 
     // public function show($uuid,WalletProcessor $processor){
     //     return $processor->show($this,$uuid);

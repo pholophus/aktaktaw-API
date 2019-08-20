@@ -46,7 +46,7 @@ class UsersTableSeeder extends Seeder
                         'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
                         'avatar_file_path' => $faker->regexify('[A-Z0-9]') . '.jpg',
                         'resume_file_path' => $faker->regexify('[A-Z0-9]') . '.pdf',
-                        'wallet_id' => $wallet->id,
+                        //'wallet_id' => $wallet->id,
                         'user_id' => $user->id,
                     ]);
 

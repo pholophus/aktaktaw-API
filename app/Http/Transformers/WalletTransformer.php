@@ -4,16 +4,18 @@ namespace App\Http\Transformers;
 
 use App\Concerns\Formatter;
 use App\Models\Wallet as WalletModel;
+use App\Models\User as UserModel;
 use League\Fractal\TransformerAbstract;
 
 class WalletTransformer extends TransformerAbstract
 {
     use Formatter;
 
-    public function transform(WalletModel $wallet)
+    public function transform(UserModel $user)
     {
+        $wallet = $user->wallet;
         return [
-            'id' => $wallet->uuid,
+            'user_id' => $user->uuid,
             'amount' => $wallet->amount,
             'type' => $wallet->type,
             'status' => $wallet->status,

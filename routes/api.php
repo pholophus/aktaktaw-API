@@ -59,7 +59,7 @@ $api->version('v1', function ($api) {
 
         //Wallet
         $api->group(['prefix' => 'wallet', 'namespace' => 'Wallet'], function ($api) {
-            $api->get('/', 'WalletController@index');
+            //$api->get('/', 'WalletController@index');
             // $api->get('/{id}', 'WalletController@show');
             // $api->put('/{id}', 'WalletController@update');
 

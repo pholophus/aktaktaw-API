@@ -76,7 +76,7 @@ class Type extends Processor
         //use validator when retrieving input
         $validator = $this->validator->on('update')->with($inputs);
         if ($validator->fails()) {
-            throw new UpdateFailed('Could not update language', $validator->errors());
+            throw new UpdateFailed('Could not update type', $validator->errors());
         }
         try {
             // $User = auth('api')->id;
@@ -106,7 +106,7 @@ class Type extends Processor
     public function delete($listener, $uuid)
     {
         if (!$uuid) {
-            throw new DeleteFailed('Could not delete language');
+            throw new DeleteFailed('Could not delete type');
         }
 
         try {
@@ -121,7 +121,7 @@ class Type extends Processor
 
         $Type->delete();
 
-        return setApiResponse('success', 'deleted', 'language');
+        return setApiResponse('success', 'deleted', 'type');
     }
 
 }

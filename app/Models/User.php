@@ -59,9 +59,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(User_Language::class);
     }
 
-    public function wallet(){
-        return $this->hasOne(Wallet::class);
-    }
     public function profile()
     {
         return $this->hasOne(\App\Models\Profile::class, 'user_id', 'id');
@@ -79,4 +76,9 @@ class User extends Authenticatable implements JWTSubject
     // public function type(){
     //     return $this->belongsToMany(Type::class);
     // }
+
+    public function wallet(){
+        return $this->hasOne(Wallet::class);
+    }
+
 }

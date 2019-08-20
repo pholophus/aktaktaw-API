@@ -4,8 +4,10 @@ namespace App\Processors\Booking;
 
 use Carbon\Carbon;
 use App\Models\Booking as BookingModel;
-use App\Models\BookingBooking as BookingBookingModel;
+use App\Models\Type as TypeModel;
 use App\Models\Role as RoleModel;
+use App\Models\Expertise as ExpertiseModel;
+use App\Models\User as UserModel;
 
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
@@ -57,13 +59,44 @@ class Booking extends Processor
         if ($validator->fails()) {
             return $listener->validationFailed($validator->getMessageBag());
         }
+
+        if(is_array($inputs['type_id'])){
+            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
+            if(!$types){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }else{
+            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
+            if(!$type){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }
+
+        if(is_array($inputs['expertise_id'])){
+            $expertises = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
+            if(!$expertises){
+                return $listener->ExpertiseDoesNotExistsError();
+            }
+        }else{
+            $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
+            if(!$expertise){
+                return $listener->ExpertiseTypeDoesNotExistsError();
+            }
+        }
+
         BookingModel::create([
             'origin' =>  $inputs['origin'],
             'booking_date' =>  $inputs['booking_date'],
             'booking_time' =>  $inputs['booking_time'],
             'end_call' =>  $inputs['end_call'],
             'notes' =>  $inputs['notes'],
-            'language' =>  $inputs['language']
+            'language' =>  $inputs['language'],
+            'origin_id' => auth()->user()->id,
+           // 'translator_id' =>
+            //'status_id'=>
+            'expertise_id'=> $expertise->id,
+            'type_id'=> $type->id
+
         ]);
 
         return setApiResponse('success', 'created', 'booking');
@@ -84,6 +117,29 @@ class Booking extends Processor
             return $listener->bookingDoesNotExistsError();
         }
 
+        if(is_array($inputs['type_id'])){
+            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
+            if(!$types){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }else{
+            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
+            if(!$type){
+                return $listener->TypeDoesNotExistsError();
+            }
+        }
+
+        if(is_array($inputs['expertise_id'])){
+            $expertises = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
+            if(!$expertises){
+                return $listener->ExpertiseDoesNotExistsError();
+            }
+        }else{
+            $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
+            if(!$expertise){
+                return $listener->ExpertiseTypeDoesNotExistsError();
+            }
+        }
 
         $booking->update([
             'origin' =>  $inputs['origin'],
@@ -91,7 +147,12 @@ class Booking extends Processor
             'booking_time' =>  $inputs['booking_time'],
             'end_call' =>  $inputs['end_call'],
             'notes' =>  $inputs['notes'],
-            'language' =>  $inputs['language']
+            'language' =>  $inputs['language'],
+            'origin_id' => auth()->user()->id,
+            //'translator_id' =>
+            //'status_id'=>
+            'expertise_id'=> $expertise->id,
+            'type_id'=> $type->id
         ]);
         return setApiResponse('success', 'updated', 'booking');
     }

@@ -21,6 +21,9 @@ class Profile extends Base
         'first_name','last_name', 'phone_no','avatar_file_path','resume_file_path','user_id','wallet_id'
     ];
 
+    // public function wallet(){
+    //     return $this->hasOne(\App\Models\Wallet::class,'wallet_id','id');
+    // }
 
     public function user(){
         return $this->hasOne(\App\Models\User::class,'user_id','id');
