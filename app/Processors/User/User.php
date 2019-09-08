@@ -29,6 +29,8 @@ class User extends Processor
         // if(!checkUserAccess('management'))
         //     return setApiResponse('error','access');
 
+        
+
         $user = UserModel::latest()->paginate(15);
         return $listener->showUserListing($user);
     }
@@ -59,53 +61,31 @@ class User extends Processor
         }
 
         if(!validateEmail($inputs['email']))
-            throw new UpdateFailed('Could not update user, wrong email format', $validator->errors());
+            throw new UpdateFailed('Could not create user, wrong email format', $validator->errors());
 
         // check user if exist not deleted
-        $chekuser = UserModel::where('email',$inputs['email'])->first();
-        if($chekuser){
+        $user = UserModel::where('email',$inputs['email'])->first();
+        if($user){
             return $listener->accountExistsError();
         }
 
-        // $password = randomPassword();
-        $password = 'secret';
-
-
-
-        //if user ada dalam deleted model. then restore
-        $chekdeleteduser = UserModel::where('email',$inputs['email'])->withTrashed()->first();
-        //if true, restore the user and update
-        if($chekdeleteduser)
-            $chekdeleteduser->restore();
-
-
-        $user = UserModel::updateorcreate([
-            'email' => $inputs['email']
-        ],[
-            //'name' => $inputs['name'],
-            'password'=>bcrypt($password)
-        ]);
-
-        $id= UserModel::where('email',$inputs['email'])->first()->id;
-        $profile = ProfileModel::updateorcreate([
-            'user_id' => $id,
-        ]);
-
-        $wallet = WalletModel::updateorcreate([
-            'user_id' => $id,
-        ]);
-
-
-        // if(is_array($inputs['role_id'])){
-        //     $user->assignRole($roles->pluck('name')->toArray());
-        // }else{
-
-        //     $user->assignRole($role->name);
-        // }
-        $role = \App\Models\Role::where('name','general user')->first();
-        if(! $user->hasRole($role)) {
-            $user->assignRole($role);
+        $validator = $this->validator->on('create')->with($inputs);
+        if ($validator->fails()) {
+            return $listener->validationFailed($validator->getMessageBag());
         }
+
+        $user = UserModel::create([
+            'email' => $inputs['email'],
+            'password' => bcrypt($inputs['password']),
+        ]);
+
+        $profile = $user->profile();
+        
+        $profile->create([
+            'name' => $inputs['name'],
+        ]);
+
+        $user->roles()->attach($inputs['role_id']);
 
        return setApiResponse('success','created','user');
     }
@@ -125,43 +105,19 @@ class User extends Processor
             return $listener->accountDoesNotExistsError();
         }
 
-        // $user->update([
-        //     'name' =>  $inputs['name'] ,
-        // ]);
+        $user->update([
+            'user_status_id' => $inputs['user_status'],
+            'translator_status_id' => $inputs['translator_status'],
+        ]);
+        $id = auth()->user()->id;
 
-        // if(isset($inputs['is_active'])){
-        //     $user->is_active = $inputs['is_active'];
-        //     $user->save();
-        // }
-        // if(isset($inputs['image_url'])){
-        //     $user->image_url = $inputs['image_url'];
-        //     $user->save();
-        // }
-
-        if(isset($inputs['password'])){
-            $user->password = bcrypt($inputs['password']);
-            $user->save();
-        }
-
-        // if(isset($inputs['role_id'])){
-        //     if(is_array($inputs['role_id'])){
-        //         $roles= RoleModel::whereIn('uuid',$inputs['role_id'])->get();
-        //         if(!$roles){
-        //             return $listener->roleNotExists();
-        //         }
-        //         $user->syncRoles($roles->pluck('name')->toArray());
-        //     }else{
-        //         $role= RoleModel::where('uuid',$inputs['role_id'])->first();
-        //         if(!$role){
-        //             return $listener->roleNotExists();
-        //         }
-        //         $user->syncRoles($role->name);
-        //     }
-
-        // }
+        $user->expertises()->where('user_id',$id)->sync([
+            'expertise_id' => $inputs['expertise'],
+        ]);
 
         return setApiResponse('success','updated','user');
     }
+
     public function delete($listener,$userUuid)
     {
         // if(!checkUserAccess('management'))
@@ -200,6 +156,7 @@ class User extends Processor
 
         $user = UserModel::search($query)->paginate(20);
 
+        //$user = UserModel::search($query)->get();
 
         return $listener->showUser($user);
     }

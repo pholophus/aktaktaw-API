@@ -13,7 +13,7 @@ class BookingTransformer extends TransformerAbstract
     public function transform(BookingModel $booking)
     {
         return [
-            'id' => $booking->uuid,
+            'booking_id' => $booking->uuid,
             'origin' => $booking->origin,
             'booking_date' => $booking->booking_date ?? '',
             'booking_time' => $booking->booking_time ?? '',
@@ -22,9 +22,9 @@ class BookingTransformer extends TransformerAbstract
             'notes' => $booking->notes ?? '',
             'language' => $booking->language ?? '',
             // 'translator' => $this->translator($booking) ?? '',
-            'origin' => $this->origin($booking) ?? '',
-            'expertise' => $this->expertise($booking) ?? '',
-            'type' => $this->type($booking) ?? '',
+            // 'origin' => $this->origin($booking) ?? '',
+            // 'expertise' => $this->expertise($booking) ?? '',
+            // 'type' => $this->type($booking) ?? '',
             // 'status' => $this->status($booking) ?? '',
             'created_at' => $booking->created_at->format('c'),
             'updated_at' => $booking->created_at->format('c'),
@@ -44,38 +44,30 @@ class BookingTransformer extends TransformerAbstract
     //     }
     //     return $item;
     // }
-    public function origin(BookingModel $booking)
-    {
-        $user = $booking->user;
-
-        $item [] = [
-            'id' => $user->uuid ?? '',
-            'first_name' => $user->profile->first_name ?? '',
-            'last_name' => $user->profile->last_name ?? '',
-        ];
-        
-        return $item;
-    }
-    public function expertise(BookingModel $booking)
-    {
-        $expertise = $booking->expertise;
-        $item[] = [
-            'id' => $expertise->uuid,
-            'name' => $expertise->name,
-            'slug' => $expertise->slug,
-        ];
-
-        return $item;
-    }
-    public function type(BookingModel $booking)
-    {
-        $type = $booking->type;
-        $item[] = [
-            'id' => $type->uuid,
-            'name' => $type->name,
-            'category' => $type->category,
-        ];
-
-        return $item;
-    }
+    // public function groups(BookingModel $booking)
+    // {
+    //     $groups = $booking->groups;
+    //     $item = [];
+    //     foreach ($groups as $group) {
+    //         $item[] = [
+    //             'id' => $group->uuid,
+    //             'name' => $group->name,
+    //             'slug' => $group->slug
+    //         ];
+    //     }
+    //     return $item;
+    // }
+    // public function roles(BookingModel $booking)
+    // {
+    //     $items = [];
+    //     $roles = $booking->roles()->get();
+    //     foreach ($roles as $role) {
+    //         array_push($items, [
+    //             'id' => $role->uuid,
+    //             'slug' => $role->slug,
+    //             'name' => $role->name
+    //         ]);
+    //     }
+    //     return $items;
+    // }
 }

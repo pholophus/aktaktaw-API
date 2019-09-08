@@ -3,7 +3,7 @@
 namespace App\Processors\LanguageUser;
 
 use Carbon\Carbon;
-use App\Models\UserLanguage as LanguageUserModel;
+use App\Models\Language as LanguageUserModel;
 use App\Models\Type as TypeModel;
 
 use App\Processors\Processor;

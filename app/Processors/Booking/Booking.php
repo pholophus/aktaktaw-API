@@ -60,30 +60,11 @@ class Booking extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        if(is_array($inputs['type_id'])){
-            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
-            if(!$types){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }else{
-            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
-            if(!$type){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }
-
-        if(is_array($inputs['expertise_id'])){
-            $expertises = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
-            if(!$expertises){
-                return $listener->ExpertiseDoesNotExistsError();
-            }
-        }else{
-            $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
-            if(!$expertise){
-                return $listener->ExpertiseTypeDoesNotExistsError();
-            }
-        }
-
+        $user = UserModel::whereHas('languages', function($q) use($inputs) {
+            $q->where('language_id', $inputs['language']);
+        })->whereHas('expertises', function($q) use ($inputs){
+            $q->where('expertise_id', $inputs['expertise']);
+        })->where('translator_status_id',0)->orderBy('booked','asc')->first();
         BookingModel::create([
             'origin' =>  $inputs['origin'],
             'booking_date' =>  $inputs['booking_date'],
@@ -94,8 +75,7 @@ class Booking extends Processor
             'origin_id' => auth()->user()->id,
            // 'translator_id' =>
             //'status_id'=>
-            'expertise_id'=> $expertise->id,
-            'type_id'=> $type->id
+            'expertise_id'=> $inputs['expertise'],
 
         ]);
 

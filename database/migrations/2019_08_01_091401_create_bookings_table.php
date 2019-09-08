@@ -27,8 +27,8 @@ class CreateBookingsTable extends Migration
             $table->string('translator_id')->nullable();
             $table->integer('origin_id')->nullable();
             $table->integer('expertise_id')->nullable();
-            $table->integer('type_id')->nullable();
-            $table->integer('status_id')->nullable();    
+            $table->integer('type')->nullable();
+            $table->integer('status')->nullable();    
             $table->timestamps();
             $table->softDeletes();
         });

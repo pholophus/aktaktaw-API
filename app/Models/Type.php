@@ -14,7 +14,7 @@ class Type extends Model
         'name','category'
     ];
 
-    public function UserLanguage(){
-        return $this->hasMany(UserLanguage::class);
+    public function languages(){
+        return $this->hasMany(Language::class,'type_id','id');
     }
 }

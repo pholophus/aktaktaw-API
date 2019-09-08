@@ -13,10 +13,26 @@ class ExpertiseTransformer extends TransformerAbstract
     public function transform(ExpertiseModel $expertise)
     {
         return [
-            'id' => $expertise->uuid,
-            'name' => $expertise->name,
+            'expertise_id' => $expertise->uuid,
+            'expertise_name' => $expertise->expertise_name,
+            'fee_rate' => $this->fee($expertise),
+            'expertise_status' => $expertise->expertise_status,
             'created_at' => $expertise->created_at->format('c'),
             'updated_at' => $expertise->created_at->format('c'),
         ];
+    }
+
+    public function fee(ExpertiseModel $expertise)
+    {
+        $item[] = [
+            'id' => $expertise->fees()->value('uuid') ?? '',
+            'name' => $expertise->fees()->value('fee_name') ?? '',
+            'duration' => $expertise->fees()->value('fee_duration') ?? '',
+            'rate' => $expertise->fees()->value('fee_rate') ?? '',
+            'status' => $expertise->fees()->value('fee_status') ?? '',
+            //'language_code' => $expertise->expertises()->where('language_type','=',1)->value('language_code') ?? '',
+        ];
+
+        return $item;
     }
 }

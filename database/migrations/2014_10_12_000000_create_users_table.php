@@ -16,17 +16,18 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid')->nullable()->index();
-            //$table->string('username');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('social_google_id')->nullable();
             $table->string('social_facebook_id')->nullable();
             //$table->string('role_id')->nullable();
-            $table->boolean('user_status_id')->nullable();
+            $table->integer('is_new')->default(0);
+            $table->integer('user_status_id')->default(0);
             //$table->boolean('user_status_id')->nullable()->default(true);
             //boolean ke string?
-            $table->boolean('translator_status_id')->nullable();
+            $table->integer('translator_status_id')->default(0);
+            $table->integer('booked')->default(0);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
