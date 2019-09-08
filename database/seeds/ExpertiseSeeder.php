@@ -26,12 +26,15 @@ class ExpertiseSeeder extends Seeder
             'Sports',
             ];
         foreach ($array as $arr) {
-            for ($i = 0; $i < 10; $i++) {
+            //for ($i = 0; $i < 10; $i++) {
                 $expertise  = \App\Models\Expertise::updateOrCreate([
-                    'name' => $arr,
+                    'expertise_name' => $arr,
+                    'expertise_status' => rand(0,1),
                     'slug' => str_slug($arr,'_'),
                 ]);
-            }
+
+                $expertise->users()->sync($expertise);
+            //}
         }
     }
 }

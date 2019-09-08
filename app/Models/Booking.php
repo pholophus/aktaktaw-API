@@ -13,22 +13,27 @@ class Booking extends Base
         'origin','booking_date','booking_time','end_call','notes','language','translator_id','origin_id','expertise_id','type_id','status_id'  
     ];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'origin_id', 'id');
+        return $this->belongsToMany(User::class,'booking_user','booking_id', 'user_id');
     }
-    public function type()
-    {
-        return $this->belongsTo(Type::class, 'type_id', 'id');
-    }
+    // public function type()
+    // {
+    //     return $this->belongsTo(Type::class, 'type_id', 'id');
+    // }
     public function expertise()
     {
         return $this->belongsTo(Expertise::class, 'expertise_id', 'id');
     }
-    public function notification()
+
+    public function status()
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasOne(Status::class);
     }
+    // public function notification()
+    // {
+    //     return $this->hasMany(Notification::class);
+    // }
 
     //statuses
 

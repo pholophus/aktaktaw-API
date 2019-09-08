@@ -7,7 +7,7 @@ use App\Models\User as UserModel;
 use App\Models\Profile as ProfileModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Validators\User as Validator;
+use App\Validators\Profile as Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,23 +39,48 @@ class Profile extends Processor
         if ($validator->fails()) {
             throw new UpdateFailed('Could not update user', $validator->errors());
         }
-        $user = auth()->user()->profile();
-        $user->update([
-            'first_name' =>  $inputs['first_name'] ,
-            'last_name' =>  $inputs['last_name'] ,
-            'phone_no' => cleanPhoneNumber($inputs['phone_no']),
+        $profile = auth()->user()->profile();
+        $profile->update([
+            'name' => $inputs['name'],
+            'phone_no' => $inputs['phone_no'],
+            'avatar_file_path' => $inputs['image'],
+            'resume_file_path' => $inputs['resume'],
         ]);
 
-        if(isset($inputs['avatar_file_path'])){
-            $user->image_url = $inputs['avatar_file_path'];    
-            $user->save();
-        }
-        if(isset($inputs['resume_file_path'])){
-            $user->image_url = $inputs['resume_file_path'];    
-            $user->save();
-        }
+        $user = auth()->user();
+
+        $user->update([
+            'translator_status_id' => $inputs['translator_status'],
+            'is_new' => $inputs['is_new']
+        ]);
+
+        $id = auth()->user()->id;
+
+        $user->languages()->where('user_id',$id)->sync([
+            'language_id' => $inputs['languages'],
+        ]);
+
+        $user->expertises()->where('user_id',$id)->sync([
+            'expertise_id' => $inputs['expertise'],
+        ]);
 
         return setApiResponse('success','updated','user profile');
+    }
+
+    public function updatePassword($listener, array $inputs){
+        $validator = $this->validator->on('Password')->with($inputs);
+        if ($validator->fails()) {
+            throw new UpdateFailed('Could not update user', $validator->errors());
+        }
+
+        $user = auth()->user();
+
+        $password = $inputs['password'];
+        $user->update([
+            'password' => bcrypt($password),
+        ]);
+        
+        return setApiResponse('success','updated','user password');
     }
 
 }

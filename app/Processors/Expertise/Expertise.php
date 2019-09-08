@@ -4,6 +4,7 @@ namespace App\Processors\Expertise;
 
 use Carbon\Carbon;
 use App\Models\Expertise as ExpertiseModel;
+use App\Models\Fee as FeeModel;
 
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
@@ -42,11 +43,13 @@ class Expertise extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        ExpertiseModel::updateOrcreate([
-            'name' =>  $inputs['name'],
+        $expertise = ExpertiseModel::updateOrcreate([
+            'expertise_name' =>  $inputs['expertise_name'],
         ],[
-            'slug'=>  str_slug($inputs['name']),
+            'slug'=>  str_slug($inputs['expertise_name']),
         ]);
+
+        $expertise->fees()->attach($inputs['fee_rate']);
 
         return setApiResponse('success','created','expertise');
     }
@@ -64,10 +67,15 @@ class Expertise extends Processor
             return $listener->expertiseDoesNotExistsError();
         }
 
-
         $expertise->update([
-            'name' =>  $inputs['name'],
-            'slug'=>  str_slug($inputs['name'])
+            'expertise_name' =>  $inputs['expertise_name'],
+            'slug'=>  str_slug($inputs['expertise_name'])
+        ]);
+
+        $id = ExpertiseModel::where('uuid',$expertiseUuid)->value('id');
+
+        $expertise->fees()->where('expertise_id',$id)->sync([
+            'fee_id' => $inputs['fee_rate'],
         ]);
 
         return setApiResponse('success','updated','expertise');

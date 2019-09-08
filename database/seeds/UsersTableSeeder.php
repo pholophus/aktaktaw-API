@@ -33,6 +33,9 @@ class UsersTableSeeder extends Seeder
                         'password' => bcrypt('secret'),
                         'social_google_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
                         'social_facebook_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
+                        'user_status_id' => rand(0,1),
+                        'translator_status_id' => rand(0,2),
+                        'is_new' => rand(0,1),
                     ]);
 
                     $wallet = \App\Models\Wallet::updateOrCreate([
@@ -41,23 +44,17 @@ class UsersTableSeeder extends Seeder
                     ]);
 
                     $profile = \App\Models\Profile::updateOrCreate([
-                        'first_name' => $faker->firstName,
-                        'last_name' => $faker->lastName,
+                        'name' => $faker->name,
                         'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
                         'avatar_file_path' => $faker->regexify('[A-Z0-9]') . '.jpg',
                         'resume_file_path' => $faker->regexify('[A-Z0-9]') . '.pdf',
-                        //'wallet_id' => $wallet->id,
+                        'wallet_id' => $wallet->id,
                         'user_id' => $user->id,
                     ]);
 
                     if(! $user->hasRole($role)) {
                         $user->assignRole($role);
                     }
-
-                    $userExpertise = \App\Models\UserExpertise::updateOrCreate([
-                        'user_id'=> $user->id,
-                        'expertise_id'=> $expertises[mt_rand(0,6)]->id,
-                    ]);
                 }
             //}
         }

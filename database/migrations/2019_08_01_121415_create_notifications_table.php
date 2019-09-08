@@ -16,7 +16,7 @@ class CreateNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->bigIncrements('id')->index();
             $table->string('uuid')->index();
-            $table->integer('booking_id')->nullable();
+            $table->integer('order_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->string('title')->nullable();
             $table->string('description')->nullable();

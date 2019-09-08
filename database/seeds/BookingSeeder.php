@@ -23,9 +23,6 @@ class BookingSeeder extends Seeder
         $this->command->info('Booking Seed');
 
         $users = \App\Models\User::all();
-        $type = \App\Models\Type::all();
-        $expertise = \App\Models\Expertise::all();
-
         foreach ($origins as $origin) {
             for ($i = 0; $i < 10; $i++) {
                 $booking  = \App\Models\Booking::updateOrCreate([
@@ -38,10 +35,12 @@ class BookingSeeder extends Seeder
                     'language' => $faker->languageCode,
                     //'translator_id' => rand(1,100),
                     'origin_id' => mt_rand(1,$users->count()),
-                    'expertise_id' => mt_rand(1,$expertise->count()),
-                    'type_id'=> mt_rand(1,$type->count()),
+                    'expertise_id' =>rand(1,7),
+                    'status'=> rand(0,1),
+                    'type' => rand(0,1),
                     // 'status_id' => rand(1,100),
-                ]);               
+                ]);
+                $booking->users()->sync($booking);               
             }
         }
     }

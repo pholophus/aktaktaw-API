@@ -12,10 +12,9 @@ class RoleTransformer extends TransformerAbstract
     public function transform(RoleModel $roles)
     {
          return[
-            'id'=> $roles->uuid,
+            'role_id'=> $roles->uuid,
+            'role_name'=> $roles->name,
             'display_name'=> $roles->name_display,
-            'name'=> $roles->name,
-            'slug'=> $roles->slug,
             'created_at'=> $roles->created_at->format('c'),
             'updated_at'=> $roles->updated_at->format('c')
         ];

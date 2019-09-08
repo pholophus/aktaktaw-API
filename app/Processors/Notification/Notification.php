@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Processors\Processor;
 use App\Models\Notification as NotificationModel;
 use App\Models\User as UserModel;
-use App\Models\Booking as BookingModel;
+
 use App\Validators\Notification as Validator;
 use Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,21 +31,8 @@ class Notification extends Processor
             throw new StoreFailed('Could not send notifications', $validator->errors());
         }
 
-        if(is_array($inputs['booking_id'])){
-            $bookings = BookingModel::whereIn('uuid',$inputs['booking_id'])->get();
-            if(!$bookings){
-                return $listener->BookingDoesNotExistsError();
-            }
-        }else{
-            $booking = BookingModel::where('uuid',$inputs['booking_id'])->first();
-            if(!$booking){
-                return $listener->BookingDoesNotExistsError();
-            }
-        }
-        
         NotificationModel::create([
             'user_id' => auth()->user()->id,
-            'booking_id' => $booking->id,
             'title' =>  $inputs['title'],
             'description' =>  $inputs['description'], //global , personal, group
         ]);

@@ -46,12 +46,8 @@ class Role extends Processor
         }
 
         RoleModel::updateOrcreate([
-            'name' =>  $inputs['name'],
-            'guard_name' => 'api',
-
-        ], [
-            'slug' =>  str_slug($inputs['name']),
-            'name_display' =>  str_slug($inputs['name'], '_'),
+            'name' =>  $inputs['role_name'],
+            'name_display' =>  str_slug($inputs['display_name'], '_'),
         ]);
 
         return setApiResponse('success', 'created', 'role');
@@ -72,11 +68,10 @@ class Role extends Processor
         }
 
 
+        
         $role->update([
-            //'code' =>  $inputs['code'],
-            'name' =>  $inputs['name'],
-            'slug' =>  str_slug($inputs['name']),
-            'name_display' =>  str_slug($inputs['name'], '_')
+            'name' =>  $inputs['role_name'],
+            'name_display' =>  str_slug($inputs['display_name'], '_'),
         ]);
 
         return setApiResponse('success', 'updated', 'role');

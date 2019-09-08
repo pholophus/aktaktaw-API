@@ -3,7 +3,7 @@
 namespace App\Http\Transformers;
 
 use App\Concerns\Formatter;
-use App\Models\UserLanguage as LanguageModel;
+use App\Models\Language as LanguageModel;
 use League\Fractal\TransformerAbstract;
 
 class LanguageUserTransformer extends TransformerAbstract
