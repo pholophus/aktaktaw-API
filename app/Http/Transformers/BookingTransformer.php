@@ -14,68 +14,83 @@ class BookingTransformer extends TransformerAbstract
     {
         return [
             'id' => $booking->uuid,
-            'origin' => $booking->origin,
+            'booking_type' => $booking->booking_type ?? '',
+           // 'origin' => $booking->origin,
             'booking_date' => $booking->booking_date ?? '',
             'booking_time' => $booking->booking_time ?? '',
-            //'call_duration' => $booking->call_duration ?? '',
+            'call_duration' => $booking->call_duration ?? '',
             'end_call' => $booking->end_call ?? '',  
             'notes' => $booking->notes ?? '',
-            'language' => $booking->language ?? '',
-            // 'translator' => $this->translator($booking) ?? '',
-            'origin' => $this->origin($booking) ?? '',
+            'booking_fee' => $booking->booking_fee ?? '',
+            'booking_status' => $booking->booking_status ?? '',
+            'created_by' => $this->creator($booking) ?? '',
+            'request_by' => $this->requester($booking) ?? '',
+            'translator_id' => $this->translator($booking) ?? '',
+            //'language_id' => $this->language($booking) ?? '',
             'expertise' => $this->expertise($booking) ?? '',
-            'type' => $this->type($booking) ?? '',
-            // 'status' => $this->status($booking) ?? '',
             'created_at' => $booking->created_at->format('c'),
             'updated_at' => $booking->created_at->format('c'),
         ];
     }
 
-    // public function translator(BookingModel $booking)
-    // {
-    //     $translators = $booking->translators;
-    //     $item = [];
-    //     foreach ($translators as $translator) {
-    //         $item[] = [
-    //             'id' => $translator->uuid,
-    //             'name' => $translator->name,
-    //             'code' => $translator->code
-    //         ];
-    //     }
-    //     return $item;
-    // }
-    public function origin(BookingModel $booking)
+    public function translator(BookingModel $booking)
     {
-        $user = $booking->user;
+        $id = $booking->translator_id;
+        $translator = $booking->user->where('id',$id)->first();
+
+            $item[] = [
+                'id' => $translator->uuid,
+                'name' => $translator->profile->first_name .' '. $translator->profile->last_name ?? '' ,
+            ];
+ 
+        return $item;
+    }
+    public function creator(BookingModel $booking)
+    {
+        $creator = $booking->user;
+        
 
         $item [] = [
-            'id' => $user->uuid ?? '',
-            'first_name' => $user->profile->first_name ?? '',
-            'last_name' => $user->profile->last_name ?? '',
+            'id' => $creator->uuid ?? '',
+            'name' => $creator->profile->first_name .' '. $creator->profile->last_name ?? '' ,
+            'role_id' => $creator->role->first()->uuid ?? '',
         ];
         
         return $item;
     }
+
+    public function requester(BookingModel $booking)
+    {
+        $id = $booking->requester_id;
+        //dd($id);
+        $requester = $booking->user->where('id',$id)->first();
+        //dd($requester);
+        $item [] = [
+            'id' => $requester->uuid ?? '',
+            'name' => $requester->profile->first_name .' '. $requester->profile->last_name ?? '' ,
+        ];
+        
+        return $item;
+    }
+
     public function expertise(BookingModel $booking)
     {
         $expertise = $booking->expertise;
         $item[] = [
             'id' => $expertise->uuid,
             'name' => $expertise->name,
-            'slug' => $expertise->slug,
         ];
 
         return $item;
     }
-    public function type(BookingModel $booking)
-    {
-        $type = $booking->type;
-        $item[] = [
-            'id' => $type->uuid,
-            'name' => $type->name,
-            'category' => $type->category,
-        ];
+    // public function language(BookingModel $booking)
+    // {
+    //     $language = $booking->language;
+    //     $item[] = [
+    //         'id' => $language->uuid,
+    //         'name' => $language->language_name,
+    //     ];
 
-        return $item;
-    }
+    //     return $item;
+    // }
 }

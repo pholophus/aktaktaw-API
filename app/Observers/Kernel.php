@@ -31,6 +31,7 @@ class Kernel
             \App\Models\Booking::class,
             \App\Models\Profile::class,
             \App\Models\Expertise::class,
+            \App\Models\Media::class,
             //\App\Models\Wallet::class,
 
         ],

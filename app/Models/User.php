@@ -55,8 +55,8 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function UserLanguage(){
-        return $this->hasMany(User_Language::class);
+    public function userlanguage(){
+        return $this->hasMany(UserLanguage::class);
     }
 
     public function profile()
@@ -68,10 +68,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Booking::class);
     }
     public function role(){
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class,'model_has_roles','model_id','role_id');
     }
     public function expertise(){
-        return $this->belongsToMany(Expertise::class);
+        return $this->belongsToMany(Expertise::class,'user_expertises','user_id', 'expertise_id');
     }
     // public function type(){
     //     return $this->belongsToMany(Type::class);
@@ -79,6 +79,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function wallet(){
         return $this->hasOne(Wallet::class);
+    }
+    
+    public function media(){
+        return $this->hasMany(Media::class,'user_id','id');
     }
 
 }

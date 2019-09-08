@@ -20,11 +20,11 @@ class Expertise extends Base
     ];
 
     public function user(){
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class,'user_expertises','expertise_id', 'user_id');
     }
     public function booking()
     {
-        return $this->belongsTo(Booking::class, 'profile_id', 'id');
+        return $this-hasOne(Booking::class);
     }
     
 }

@@ -26,4 +26,14 @@ class Profile extends Validator
     {
         $this->rules['query'] = ['required'];
     }
+
+    public function onImage()
+    {
+        $this->rules['avatar_file_path'] = ['required','image'];
+    }
+
+    public function onResume()
+    {
+        $this->rules['resume_file_path'] = ['required'];
+    }
 }

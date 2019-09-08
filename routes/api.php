@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ $api->version('v1', function ($api) {
         $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
             $api->get('/me', 'ProfileController@showProfile');
-            $api->put('/update', 'ProfileController@updateProfile');
+            $api->post('/update', 'ProfileController@updateProfile');
         });
 
         //Role/

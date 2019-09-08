@@ -61,6 +61,23 @@ class BookingController extends Controller
         return $this->response->errorNotFound("expertise does not exists");
     }
 
+    public function TranslatorDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("translator does not exists");
+    }
+    public function RequesterDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("requester does not exists");
+    }
+    public function TranslatorDoesNotHaveThisExpertiseError()
+    {
+        return $this->response->errorNotFound("translator does not have this expertise");
+    }
+    public function TranslatorDoesNotHaveThisLanguageError()
+    {
+        return $this->response->errorNotFound("translator does not have this language");
+    }
+
 
 
 }

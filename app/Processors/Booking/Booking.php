@@ -60,42 +60,59 @@ class Booking extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        if(is_array($inputs['type_id'])){
-            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
-            if(!$types){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }else{
-            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
-            if(!$type){
-                return $listener->TypeDoesNotExistsError();
-            }
+        //     $language = languageModel::where('uuid',$inputs['language_id'])->first();
+        //     if(!$language){
+        //         return $listener->LanguageDoesNotExistsError();
+        //     }
+
+        $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
+        if(!$expertise){
+            return $listener->ExpertiseDoesNotExistsError();
         }
 
-        if(is_array($inputs['expertise_id'])){
-            $expertises = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
-            if(!$expertises){
-                return $listener->ExpertiseDoesNotExistsError();
+        $translator = UserModel::where('uuid',$inputs['translator_id'])->with('roles')->role('translator')->first();
+            if(!$translator){
+                return $listener->TranslatorDoesNotExistsError();
             }
-        }else{
-            $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
-            if(!$expertise){
-                return $listener->ExpertiseTypeDoesNotExistsError();
-            }
+
+            // $hasExpertises = $translator->expertise;
+            // foreach( $hasExpertises as $hasExpertise)
+            // {
+            //     if(!$hasExpertise->where('expertise_id',$inputs['expertise_id'])){
+            //      return $listener->TranslatorDoesNotHaveThisExpertiseError();
+            //     }
+            // }
+
+            // $hasLanguages = $translator->language;
+            // foreach($hasLanguages as $hasLanguage)
+            // {
+            //     if(!$hasLanguage->where('language_id',$inputs['language_id'])){
+            //      return $listener->TranslatorDoesNotHaveThisLanguageError();
+            //     }
+            // }
+
+        $requester = UserModel::where('uuid',$inputs['requester_id'])->role('general_user')->first();
+        if(!$requester){
+            return $listener->RequesterDoesNotExistsError();
         }
+        
+
+       // $origin = auth()->user()->role('administrator') ? 'admin' : 'user';
 
         BookingModel::create([
-            'origin' =>  $inputs['origin'],
+            //'origin' =>  $origin,
             'booking_date' =>  $inputs['booking_date'],
             'booking_time' =>  $inputs['booking_time'],
+            'booking_type' => $inputs['booking_type'],
             'end_call' =>  $inputs['end_call'],
+            'call_duration' => $inputs['call_duration'],
             'notes' =>  $inputs['notes'],
-            'language' =>  $inputs['language'],
             'origin_id' => auth()->user()->id,
-           // 'translator_id' =>
-            //'status_id'=>
+            'translator_id' =>$translator->id,
+            'booking_fee' => $inputs['booking_fee'],
+            //'language_id'=> $language->id,
             'expertise_id'=> $expertise->id,
-            'type_id'=> $type->id
+            'requester_id'=> $requester->id
 
         ]);
 
@@ -117,42 +134,21 @@ class Booking extends Processor
             return $listener->bookingDoesNotExistsError();
         }
 
-        if(is_array($inputs['type_id'])){
-            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
-            if(!$types){
-                return $listener->TypeDoesNotExistsError();
+        $translator = UserModel::where('uuid',$inputs['translator_id'])->role('translator')->first();
+            if(!$translator){
+                return $listener->TranslatorDoesNotExistsError();
             }
-        }else{
-            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
-            if(!$type){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }
-
-        if(is_array($inputs['expertise_id'])){
-            $expertises = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
-            if(!$expertises){
-                return $listener->ExpertiseDoesNotExistsError();
-            }
-        }else{
-            $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
-            if(!$expertise){
-                return $listener->ExpertiseTypeDoesNotExistsError();
-            }
-        }
 
         $booking->update([
-            'origin' =>  $inputs['origin'],
+            //'origin' =>  $inputs['origin'],
             'booking_date' =>  $inputs['booking_date'],
             'booking_time' =>  $inputs['booking_time'],
+            'booking_fee' => $inputs['booking_fee'],
+            'booking_status' => $inputs['booking_status'],
+            'call_duration' =>  $inputs['call_duration'],
             'end_call' =>  $inputs['end_call'],
             'notes' =>  $inputs['notes'],
-            'language' =>  $inputs['language'],
-            'origin_id' => auth()->user()->id,
-            //'translator_id' =>
-            //'status_id'=>
-            'expertise_id'=> $expertise->id,
-            'type_id'=> $type->id
+            'translator_id' => $translator->id
         ]);
         return setApiResponse('success', 'updated', 'booking');
     }

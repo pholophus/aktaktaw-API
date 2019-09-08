@@ -18,7 +18,7 @@ class User extends Validator
     public function onLogin()
     {
         $this->rules['email'] = ['required'];
-        $this->rules['password'] = ['required'];
+        //$this->rules['password'] = ['required'];
     }
 
     public function onUpdate()
