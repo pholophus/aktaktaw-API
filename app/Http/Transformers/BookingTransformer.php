@@ -26,7 +26,7 @@ class BookingTransformer extends TransformerAbstract
             'created_by' => $this->creator($booking) ?? '',
             'request_by' => $this->requester($booking) ?? '',
             'translator_id' => $this->translator($booking) ?? '',
-            //'language_id' => $this->language($booking) ?? '',
+            'language_id' => $this->language($booking) ?? '',
             'expertise' => $this->expertise($booking) ?? '',
             'created_at' => $booking->created_at->format('c'),
             'updated_at' => $booking->created_at->format('c'),
@@ -92,5 +92,49 @@ class BookingTransformer extends TransformerAbstract
     //     ];
 
     //     return $item;
+    // }
+
+
+    //iqbal
+
+    
+    // public function translator(BookingModel $booking)
+    // {
+    //     $translators = $booking->translators;
+    //     $item = [];
+    //     foreach ($translators as $translator) {
+    //         $item[] = [
+    //             'id' => $translator->uuid,
+    //             'name' => $translator->name,
+    //             'code' => $translator->code
+    //         ];
+    //     }
+    //     return $item;
+    // }
+    // public function groups(BookingModel $booking)
+    // {
+    //     $groups = $booking->groups;
+    //     $item = [];
+    //     foreach ($groups as $group) {
+    //         $item[] = [
+    //             'id' => $group->uuid,
+    //             'name' => $group->name,
+    //             'slug' => $group->slug
+    //         ];
+    //     }
+    //     return $item;
+    // }
+    // public function roles(BookingModel $booking)
+    // {
+    //     $items = [];
+    //     $roles = $booking->roles()->get();
+    //     foreach ($roles as $role) {
+    //         array_push($items, [
+    //             'id' => $role->uuid,
+    //             'slug' => $role->slug,
+    //             'name' => $role->name
+    //         ]);
+    //     }
+    //     return $items;
     // }
 }

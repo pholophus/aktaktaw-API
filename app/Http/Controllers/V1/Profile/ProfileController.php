@@ -28,6 +28,10 @@ class ProfileController extends Controller
         return $processor->update($this,Input::all());
     }
 
+    public function updatePassword(ProfileProcessor $processor){
+        return $processor->updatePassword($this,Input::all());
+    }
+
     public function showUserProfile($user){
         return $this->response->item($user, new ProfileTransformer);
     }

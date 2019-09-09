@@ -11,8 +11,9 @@ class User extends Validator
     public function onCreate()
     {
         $this->rules['email'] = ['required'];
-        //$this->rules['name'] = ['required'];
-        //$this->rules['role_id'] = ['required'];
+        $this->rules['name'] = ['required'];
+        $this->rules['role_id'] = ['required'];
+        $this->rules['password'] = ['required'];
     }
 
     public function onLogin()
@@ -23,9 +24,9 @@ class User extends Validator
 
     public function onUpdate()
     {
-        //$this->rules['nickname'] = ['required'];
-        //$this->rules['name'] = ['required'];
-        //$this->rules['phone_no'] = ['required'];
+        $this->rules['expertise'] = ['required'];
+        $this->rules['user_status'] = ['required'];
+        $this->rules['translator_status'] = ['required'];
     }
 
     public function onVerify()
@@ -36,9 +37,7 @@ class User extends Validator
 
     public function onPassword()
     {
-        $this->rules['current_password'] = ['required'];
         $this->rules['password'] = ['required'];
-        $this->rules['retype_password'] = ['required'];
     }
     public function onEmail()
     {

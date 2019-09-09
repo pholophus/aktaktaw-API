@@ -33,6 +33,9 @@ class UsersTableSeeder extends Seeder
                         'password' => bcrypt('secret'),
                         'social_google_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
                         'social_facebook_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
+                        'user_status' => rand(0,1),
+                        'translator_status' => rand(0,2),
+                        'is_new' => rand(0,1),
                     ]);
 
                     $wallet = \App\Models\Wallet::updateOrCreate([

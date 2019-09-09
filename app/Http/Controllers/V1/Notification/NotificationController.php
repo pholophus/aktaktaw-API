@@ -22,9 +22,4 @@ class NotificationController extends Controller
     public function successful(){
         return response()->json(['status'=>'success','message'=>'successfully send notifications'],201);
     }
-
-    public function BookingDoesNotExistsError()
-    {
-        return $this->response->errorNotFound("booking does not exists");
-    }
 }

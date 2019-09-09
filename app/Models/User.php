@@ -31,10 +31,14 @@ class User extends Authenticatable implements JWTSubject
     protected $searchable = [
         'columns' => [
             'users.email' => 8,
+            'profiles.name' => 10,
+        ],
+        'joins' => [
+            'profiles' => ['users.id','profiles.user_id'],
         ],
     ];
     protected $fillable = [
-        'email', 'password','social_google_id','social_facebook_id','wallet_id','user_id'
+        'email', 'password','social_google_id','social_facebook_id','wallet_id','user_id','expertise','user_status','translator_status'
     ];
 
     /**
@@ -55,27 +59,36 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function userlanguage(){
+    public function userlanguages(){
         return $this->hasMany(UserLanguage::class);
     }
-
+    public function languages(){
+        return $this->belongsToMany(Language::class,'language_user','user_id','language_id');
+    }
+    public function expertises(){
+        return $this->belongsToMany(Expertise::class,'expertise_user','user_id','expertise_id');
+    }
     public function profile()
     {
         return $this->hasOne(\App\Models\Profile::class, 'user_id', 'id');
     }
-    public function booking()
+    public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsToMany(Booking::class,'booking_user','user_id','booking_id');
     }
-    public function role(){
+    public function roles(){
         return $this->belongsToMany(Role::class,'model_has_roles','model_id','role_id');
     }
-    public function expertise(){
-        return $this->belongsToMany(Expertise::class,'user_expertises','user_id', 'expertise_id');
-    }
-    // public function type(){
-    //     return $this->belongsToMany(Type::class);
+    // public function expertise(){
+    //     return $this->belongsToMany(Expertise::class,'user_expertises','user_id', 'expertise_id');
     // }
+    // public function roles(){
+    //     return $this->belongsToMany(Role::class);
+    // }
+    public function status()
+    {
+        return $this->hasOne(Status::class);
+    }
 
     public function wallet(){
         return $this->hasOne(Wallet::class);

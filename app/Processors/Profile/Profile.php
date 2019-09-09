@@ -8,7 +8,7 @@ use App\Models\Media as MediaModel;
 use App\Models\Profile as ProfileModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Validators\User as Validator;
+use App\Validators\Profile as Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -46,11 +46,28 @@ class Profile extends Processor
             if ($validator->fails()) {
                 throw new UpdateFailed('Could not update user', $validator->errors());
             }
-            $user = auth()->user()->profile();
-            $user->update([
+            $profile = auth()->user()->profile();
+            $profile->update([
                 'first_name' =>  $inputs['first_name'] ,
                 'last_name' =>  $inputs['last_name'] ,
                 'phone_no' => cleanPhoneNumber($inputs['phone_no']),
+            ]);
+
+            $user = auth()->user();
+
+            $user->update([
+                'translator_status_id' => $inputs['translator_status'],
+                'is_new' => $inputs['is_new']
+            ]);
+
+            $id = auth()->user()->id;
+
+            $user->languages()->where('user_id',$id)->sync([
+                'language_id' => $inputs['languages'],
+            ]);
+
+            $user->expertises()->where('user_id',$id)->sync([
+                'expertise_id' => $inputs['expertise'],
             ]);
         }
 
@@ -105,6 +122,22 @@ class Profile extends Processor
        }
 
         return setApiResponse('success','updated','user profile');
+    }
+
+    public function updatePassword($listener, array $inputs){
+        $validator = $this->validator->on('Password')->with($inputs);
+        if ($validator->fails()) {
+            throw new UpdateFailed('Could not update user', $validator->errors());
+        }
+
+        $user = auth()->user();
+
+        $password = $inputs['password'];
+        $user->update([
+            'password' => bcrypt($password),
+        ]);
+        
+        return setApiResponse('success','updated','user password');
     }
 
 }

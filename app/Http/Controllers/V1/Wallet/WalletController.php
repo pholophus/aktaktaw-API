@@ -11,17 +11,17 @@ use App\Processors\Wallet\Wallet as WalletProcessor;
 
 class WalletController extends Controller
 {
-    // public function index(WalletProcessor $processor){
-    //     return $processor->index($this);
-    // }
+    public function index(WalletProcessor $processor){
+        return $processor->index($this);
+    }
 
-    // public function show($uuid,WalletProcessor $processor){
-    //     return $processor->show($this,$uuid);
-    // }
+    public function show($uuid,WalletProcessor $processor){
+        return $processor->show($this,$uuid);
+    }
 
-    // public function update($uuid, WalletProcessor $processor){
-    //     return $processor->update($this, $uuid, Input::all());
-    // }
+    public function update($uuid, WalletProcessor $processor){
+         return $processor->update($this, $uuid, Input::all());
+    }
 
     public function showUserWallet(WalletProcessor $processor){
         return $processor->showUserWallet($this);

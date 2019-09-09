@@ -10,15 +10,19 @@ class Profile extends Validator
 
     public function onCreate()
     {
-        $this->rules['first_name'] = ['required'];
-        $this->rules['last_name'] = ['required'];
+        $this->rules['name'] = ['required'];
         $this->rules['phone_no'] = ['required'];
     }
 
     public function onUpdate()
     {
-        $this->rules['first_name'] = ['required'];
-        $this->rules['last_name'] = ['required'];
+        $this->rules['name'] = ['required'];
+        $this->rules['languages'] = ['required'];
+        $this->rules['image'] = ['required'];
+        $this->rules['resume'] = ['required'];
+        $this->rules['expertise'] = ['required'];
+        $this->rules['translator_status'] = ['required'];
+        $this->rules['is_new'] = ['required'];
         $this->rules['phone_no'] = ['required'];
     }
 

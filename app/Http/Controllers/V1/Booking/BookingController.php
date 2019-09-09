@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\V1\Booking;
 
 use App\Http\Controllers\Controller;
@@ -21,34 +22,34 @@ class BookingController extends Controller
         return $processor->store($this, Input::all());
     }
 
-    public function update(BookingProcessor $processor,$bookingUuid)
+    public function update(BookingProcessor $processor,$BookingUuid)
     {
-        return $processor->update($this, $bookingUuid, Input::all());
+        return $processor->update($this, $BookingUuid, Input::all());
     }
 
-    public function destroy(BookingProcessor $processor, $bookingUuid)
+    public function destroy(BookingProcessor $processor, $BookingUuid)
     {
-        return $processor->delete($this, $bookingUuid);
+        return $processor->delete($this, $BookingUuid);
     }
 
-    public function showBookingListing($booking)
+    public function showBookingListing($Booking)
     {
-        return $this->response->paginator($booking, new BookingTransformer);
+        return $this->response->paginator($Booking, new BookingTransformer);
     }
 
-    public function showBooking($booking)
+    public function showBooking($Booking)
     {
-        return $this->response->item($booking, new BookingTransformer);
+        return $this->response->item($Booking, new BookingTransformer);
     }
 
     public function validationFailed($errors)
     {
-        throw new StoreResourceFailedException('Create booking failed ,Missing Parameters', $errors);
+        throw new StoreResourceFailedException('Create Booking failed ,Missing Parameters', $errors);
     }
 
-    public function bookingDoesNotExistsError()
+    public function BookingDoesNotExistsError()
     {
-        return $this->response->errorNotFound("booking does not exists");
+        return $this->response->errorNotFound("Booking does not exists");
     }
 
     public function TypeDoesNotExistsError()

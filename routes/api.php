@@ -27,26 +27,29 @@ $api->version('v1', function ($api) {
 
         //user management
         $api->group(['prefix' => 'users', 'namespace' => 'User'], function ($api) {
-            $api->post('/search', 'UserController@search');
             $api->get('/', 'UserController@index');
+            $api->post('/', 'UserController@store');
+            $api->post('/search', 'UserController@search');
+            //$api->post('/', 'UserController@search');
             $api->get('/{id}', 'UserController@show');
             $api->put('/{id}', 'UserController@update');
             $api->delete('/{id}', 'UserController@destroy');
         });
 
-        $api->group(['prefix' => 'language', 'namespace' => 'LanguageUser'], function ($api) {
-            $api->get('/', 'LanguageUserController@index');
+        $api->group(['prefix' => 'language', 'namespace' => 'Language'], function ($api) {
+            $api->get('/', 'LanguageController@index');
             //$api->get('/no-paginate', 'LanguageUserController@getWithoutPagination');
-            $api->get('/{id}', 'LanguageUserController@show');
-            $api->post('/', 'LanguageUserController@store');
-            $api->put('/{id}', 'LanguageUserController@update');
-            $api->delete('/{id}', 'LanguageUserController@destroy');
+            $api->get('/{id}', 'LanguageController@show');
+            $api->post('/', 'LanguageController@store');
+            $api->put('/{id}', 'LanguageController@update');
+            $api->delete('/{id}', 'LanguageController@destroy');
         });
 
         $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
             $api->get('/me', 'ProfileController@showProfile');
             $api->post('/update', 'ProfileController@updateProfile');
+            $api->put('/password', 'ProfileController@updatePassword');
         });
 
         //Role/
@@ -60,14 +63,14 @@ $api->version('v1', function ($api) {
 
         //Wallet
         $api->group(['prefix' => 'wallet', 'namespace' => 'Wallet'], function ($api) {
-            //$api->get('/', 'WalletController@index');
-            // $api->get('/{id}', 'WalletController@show');
-            // $api->put('/{id}', 'WalletController@update');
-
+            $api->get('/', 'WalletController@index');
             //user wallet
-
             $api->get('/me', 'WalletController@showUserWallet');
-            $api->put('/update', 'WalletController@updateUserWallet');
+            $api->put('/me', 'WalletController@updateUserWallet');
+
+            $api->get('/{id}', 'WalletController@show');
+            $api->put('/{id}', 'WalletController@update');
+
         });
          //Expertise/
          $api->group(['prefix' => 'expertises', 'namespace' => 'Expertise'], function ($api) {
@@ -87,13 +90,13 @@ $api->version('v1', function ($api) {
             $api->delete('/{id}', 'BookingController@destroy');
         });
 
-        //Type/
-        $api->group(['prefix' => 'types', 'namespace' => 'Type'], function ($api) {
-            $api->get('/', 'TypeController@index');
-            $api->get('/{id}', 'TypeController@show');
-            $api->post('/', 'TypeController@store');
-            $api->put('/{id}', 'TypeController@update');
-            $api->delete('/{id}', 'TypeController@destroy');
+        //Fee/
+        $api->group(['prefix' => 'fee', 'namespace' => 'Fee'], function ($api) {
+            $api->get('/', 'FeeController@index');
+            $api->get('/{id}', 'FeeController@show');
+            $api->post('/', 'FeeController@store');
+            $api->put('/{id}', 'FeeController@update');
+            $api->delete('/{id}', 'FeeController@destroy');
         });
     });
 });

@@ -99,6 +99,12 @@ class Booking extends Processor
 
        // $origin = auth()->user()->role('administrator') ? 'admin' : 'user';
 
+        $user = UserModel::whereHas('languages', function($q) use($inputs) {
+            $q->where('language_id', $inputs['language']);
+        })->whereHas('expertises', function($q) use ($inputs){
+            $q->where('expertise_id', $inputs['expertise']);
+        })->where('translator_status_id',0)->orderBy('booked','asc')->first();
+        
         BookingModel::create([
             //'origin' =>  $origin,
             'booking_date' =>  $inputs['booking_date'],
@@ -111,8 +117,9 @@ class Booking extends Processor
             'translator_id' =>$translator->id,
             'booking_fee' => $inputs['booking_fee'],
             //'language_id'=> $language->id,
-            'expertise_id'=> $expertise->id,
-            'requester_id'=> $requester->id
+            'expertise_id'=> $expertise->id, //'expertise_id'=> $inputs['expertise'],
+            'requester_id'=> $requester->id,
+            //'status_id'=>
 
         ]);
 

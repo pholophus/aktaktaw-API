@@ -27,9 +27,10 @@ class Booking extends Base
         'language_id'  
     ];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'origin_id', 'id');
+        //return $this->belongsTo(User::class, 'origin_id', 'id');
+        return $this->belongsToMany(User::class,'booking_user','booking_id', 'user_id');
     }
     // public function scopeGeneralUser()
     // {
@@ -42,17 +43,20 @@ class Booking extends Base
     // public function language()
     // {
     //     return $this->belongsTo(Language::class, 'language_id', 'id');
-    // }
+        
     public function expertise()
     {
         return $this->belongsTo(Expertise::class,'expertise_id','id');
     }
-    public function notification()
-    {
-        return $this->hasMany(Notification::class);
-    }
 
-    //statuses
+    public function status()
+    {
+        return $this->hasOne(Status::class);
+    }
+    // public function notifications()
+    // {
+    //     return $this->hasMany(Notification::class);
+    // }
 
 
 }
