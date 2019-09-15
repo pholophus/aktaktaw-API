@@ -10,32 +10,53 @@ class Booking extends Base
     protected $guard_name = 'api';
 
     protected $fillable = [
-        'origin','booking_date','booking_time','end_call','notes','language','translator_id','origin_id','expertise_id','type_id','status_id'  
+       // 'origin',
+        'booking_date',
+        'booking_time',
+        'booking_type',
+        'booking_status',
+        'call_duration',
+        'end_call',
+        'notes',
+        'language',
+        'booking_fee',
+        'translator_id',
+        'origin_id',
+        'expertise_id',
+        'requester_id',
+        'language_id'  
     ];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class,'booking_user','booking_id', 'user_id');
+        return $this->belongsTo(User::class, 'origin_id', 'id');
+        //return $this->belongsToMany(User::class,'booking_user','booking_id', 'user_id');
     }
-    // public function type()
+    // public function scopeGeneralUser()
     // {
-    //     return $this->belongsTo(Type::class, 'type_id', 'id');
+    //     return $this->user()->with('roles')->role('general_user');
     // }
+    // public function scopeTranslator()
+    // {
+    //     return $this->user()->with('roles')->role('translator');
+    // }
+    public function language()
+    {
+        return $this->belongsTo(Language::class, 'language_id', 'id');
+    }
     public function expertise()
     {
-        return $this->belongsTo(Expertise::class, 'expertise_id', 'id');
+        return $this->belongsTo(Expertise::class,'expertise_id','id');
     }
 
     public function status()
     {
         return $this->hasOne(Status::class);
     }
-    // public function notification()
+    // public function notifications()
     // {
     //     return $this->hasMany(Notification::class);
     // }
-
-    //statuses
 
 
 }

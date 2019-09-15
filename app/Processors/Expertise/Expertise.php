@@ -43,13 +43,18 @@ class Expertise extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
+        $fee = FeeModel::where('uuid',$inputs['fee_rate'])->first();
+        if(!$fee){
+            return $listener->FeeDoesNotExistsError();
+        }
+
         $expertise = ExpertiseModel::updateOrcreate([
             'expertise_name' =>  $inputs['expertise_name'],
         ],[
             'slug'=>  str_slug($inputs['expertise_name']),
         ]);
 
-        $expertise->fees()->attach($inputs['fee_rate']);
+        $expertise->fees()->attach($fee->id);
 
         return setApiResponse('success','created','expertise');
     }
@@ -67,15 +72,21 @@ class Expertise extends Processor
             return $listener->expertiseDoesNotExistsError();
         }
 
+        $fee = FeeModel::where('uuid',$inputs['fee_rate'])->first();
+        if(!$fee){
+            return $listener->FeeDoesNotExistsError();
+        }
+
         $expertise->update([
             'expertise_name' =>  $inputs['expertise_name'],
-            'slug'=>  str_slug($inputs['expertise_name'])
+            'slug'=>  str_slug($inputs['expertise_name']),
+            'expertise_status' => $inputs['expertise_status'],
         ]);
 
         $id = ExpertiseModel::where('uuid',$expertiseUuid)->value('id');
 
         $expertise->fees()->where('expertise_id',$id)->sync([
-            'fee_id' => $inputs['fee_rate'],
+            'fee_id' => $fee->id,
         ]);
 
         return setApiResponse('success','updated','expertise');

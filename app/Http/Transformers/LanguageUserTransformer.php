@@ -16,7 +16,7 @@ class LanguageUserTransformer extends TransformerAbstract
             'id' => $language->uuid,
             'language name' => $language->language_name,
             'language code' => $language->language_code,
-            'type_id' => $this->types($language) ?? '',
+           // 'type_id' => $this->types($language) ?? '',
             'created_at' => $language->created_at->format('c'),
             'updated_at' => $language->created_at->format('c'),
         ];

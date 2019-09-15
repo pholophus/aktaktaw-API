@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class UserLanguage extends Base
+class LanguageUser extends Base
 {
-    protected $table = 'user_languages';
+    protected $table = 'language_user';
 
     protected $guarded = [
         'id',
@@ -18,7 +18,4 @@ class UserLanguage extends Base
         return $this->belongsTo(User::class);
     }
 
-    public function type(){
-        return $this->belongsTo(Type::class);
-    }
 }

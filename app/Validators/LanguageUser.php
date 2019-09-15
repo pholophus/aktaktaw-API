@@ -12,14 +12,12 @@ class LanguageUser extends Validator
     {
         $this->rules['language_name'] = ['required'];
         $this->rules['language_code'] = ['required'];
-        $this->rules['type_id'] = ['required'];
     }
 
     public function onUpdate()
     {
         $this->rules['language_name'] = ['required'];
         $this->rules['language_code'] = ['required'];
-        $this->rules['type_id'] = ['required'];
     }
 
 }

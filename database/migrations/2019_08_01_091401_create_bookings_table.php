@@ -16,19 +16,20 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid')->nullable()->index();
-            //$table->string('origin')->nullable();
-            $table->enum('origin',['user','admin'])->nullable();
+            //$table->enum('origin',['user','admin'])->nullable();
             $table->date('booking_date')->nullable();
             $table->time('booking_time')->nullable();
-           // $table->float('call_duration')->nullable();
+            $table->integer('booking_type')->default(0);
+            $table->integer('booking_status')->default(0);
+            $table->string('call_duration')->nullable();
             $table->time('end_call')->nullable();
-            $table->text('notes')->nullable();
-            $table->string('language')->nullable();     
+            $table->text('notes')->nullable();     
+            $table->string('booking_fee')->nullable();
             $table->string('translator_id')->nullable();
             $table->integer('origin_id')->nullable();
             $table->integer('expertise_id')->nullable();
-            $table->integer('type')->nullable();
-            $table->integer('status')->nullable();    
+            $table->integer('requester_id')->nullable();
+            $table->integer('language_id')->nullable();    
             $table->timestamps();
             $table->softDeletes();
         });

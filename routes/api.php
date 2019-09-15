@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Http\Request;
@@ -47,7 +48,7 @@ $api->version('v1', function ($api) {
         $api->group(['prefix' => 'profile', 'namespace' => 'Profile'], function ($api) {
 
             $api->get('/me', 'ProfileController@showProfile');
-            $api->put('/update', 'ProfileController@updateProfile');
+            $api->post('/update', 'ProfileController@updateProfile');
             $api->put('/password', 'ProfileController@updatePassword');
         });
 
@@ -65,7 +66,7 @@ $api->version('v1', function ($api) {
             $api->get('/', 'WalletController@index');
             //user wallet
             $api->get('/me', 'WalletController@showUserWallet');
-            $api->put('/me', 'WalletController@updateUserWallet');
+            $api->put('/update', 'WalletController@updateUserWallet');
 
             $api->get('/{id}', 'WalletController@show');
             $api->put('/{id}', 'WalletController@update');

@@ -18,7 +18,7 @@ class CreateExpertisesTable extends Migration
             $table->string('uuid')->nullable()->index();
             $table->string('expertise_name');
             $table->string('slug')->nullable();
-            $table->integer('booking_id')->nullable();
+           // $table->integer('booking_id')->nullable();
             $table->integer('expertise_status')->default(0);
             $table->timestamps();
             $table->softDeletes();

@@ -43,13 +43,14 @@ class LanguageController extends Controller
         return $this->response->item($Language, new LanguageTransformer);
     }
 
+    public function validationFailed($errors)
+    {
+        throw new StoreResourceFailedException('Create language failed ,Missing Parameters', $errors);
+    }
+
     public function LanguageDoesNotExistsError()
     {
         return $this->response->errorNotFound("Language does not exists");
-    }
-    public function TypeDoesNotExistsError()
-    {
-        return $this->response->errorNotFound("Type does not exists");
     }
 
 

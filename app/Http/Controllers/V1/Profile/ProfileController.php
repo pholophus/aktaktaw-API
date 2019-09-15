@@ -46,4 +46,14 @@ class ProfileController extends Controller
         return $this->response->errorNotFound("Account does not exists");
     }
 
+    public function ExpertiseDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("Expertise does not exists");
+    }
+
+    public function LanguageDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("Language does not exists");
+    }
+
 }

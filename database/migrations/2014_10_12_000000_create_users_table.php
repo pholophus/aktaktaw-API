@@ -21,12 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('social_google_id')->nullable();
             $table->string('social_facebook_id')->nullable();
-            //$table->string('role_id')->nullable();
             $table->integer('is_new')->default(0);
-            $table->integer('user_status_id')->default(0);
-            //$table->boolean('user_status_id')->nullable()->default(true);
-            //boolean ke string?
-            $table->integer('translator_status_id')->default(0);
+            $table->integer('user_status')->default(0);
+            $table->integer('translator_status')->default(0);
             $table->integer('booked')->default(0);
             $table->rememberToken();
             $table->timestamps();

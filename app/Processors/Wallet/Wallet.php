@@ -59,8 +59,8 @@ class Wallet extends Processor
 
          $wallet->update([
              'amount' => $inputs['amount'],
-             'wallet_type' => $inputs['wallet_type'],
-             'wallet_status' => $inputs['wallet_status'],
+             'type' => $inputs['wallet_type'],
+             'status' => $inputs['wallet_status'],
          ]);
 
          return setApiResponse('success', 'updated', 'wallet');
@@ -87,6 +87,9 @@ class Wallet extends Processor
         if ($validator->fails()) {
             throw new UpdateFailed('Could not update wallet', $validator->errors());
         }
+
+        //$wallet = auth()->user()->wallet();
+
         $id =  auth()->user()->id;
          try{
             $wallet = WalletModel::where('user_id','=',$id)->firstorfail();
@@ -95,8 +98,8 @@ class Wallet extends Processor
          }
         $wallet->update([
             'amount' => $inputs['amount'],
-            'wallet_type' => $inputs['wallet_type'],
-            'wallet_status' => $inputs['wallet_status'],
+            'type' => $inputs['wallet_type'],
+            'status' => $inputs['wallet_status'],
         ]);
 
         return setApiResponse('success','updated','wallet');

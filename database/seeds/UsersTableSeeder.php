@@ -33,8 +33,8 @@ class UsersTableSeeder extends Seeder
                         'password' => bcrypt('secret'),
                         'social_google_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
                         'social_facebook_id' => \Ramsey\Uuid\Uuid::uuid1()->toString(),
-                        'user_status_id' => rand(0,1),
-                        'translator_status_id' => rand(0,2),
+                        'user_status' => rand(0,1),
+                        'translator_status' => rand(0,2),
                         'is_new' => rand(0,1),
                     ]);
 
@@ -43,18 +43,63 @@ class UsersTableSeeder extends Seeder
                         'amount' => rand(1,20),
                     ]);
 
-                    $profile = \App\Models\Profile::updateOrCreate([
-                        'name' => $faker->name,
-                        'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
-                        'avatar_file_path' => $faker->regexify('[A-Z0-9]') . '.jpg',
-                        'resume_file_path' => $faker->regexify('[A-Z0-9]') . '.pdf',
-                        'wallet_id' => $wallet->id,
-                        'user_id' => $user->id,
-                    ]);
-
                     if(! $user->hasRole($role)) {
                         $user->assignRole($role);
                     }
+
+                    if($user->hasRole('translator')) 
+                    {
+                        $profile = \App\Models\Profile::updateOrCreate([
+                            'name' => $faker->name,
+                            'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
+                            'avatar_file_path' => asset('uploads/defaultpicture.png'),
+                            'resume_file_path' =>  asset('uploads/dummy.pdf'),
+                            'user_id' => $user->id,
+                        ]);
+
+                        $media = \App\Models\Media::updateOrCreate([
+                            'file_name' => 'defaultpicture.png',
+                            'type' => 'Image',
+                            'folder' => 'uploads',
+                            'path' =>  'uploads/defaultpicture.png',
+                            'mime_type' => 'image/png',
+                            'user_id' => $user->id,
+                        ]);
+                        $media = \App\Models\Media::updateOrCreate([
+                            'file_name' => 'dummy.pdf',
+                            'type' => 'Resume',
+                            'folder' => 'uploads',
+                            'path' =>  'uploads/dummy.pdf',
+                            'mime_type' => 'application/pdf',
+                            'user_id' => $user->id,
+                        ]);
+
+                        $userExpertise = \App\Models\ExpertiseUser::updateOrCreate([
+                            'user_id'=> $user->id,
+                            'expertise_id'=> $expertises[mt_rand(0,6)]->id,
+                        ]);
+                        
+                    }
+                    else
+                    {
+                        $profile = \App\Models\Profile::updateOrCreate([
+                            'name' => $faker->name,
+                            'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
+                            'avatar_file_path' => asset('uploads/defaultpicture.png'),
+                            'user_id' => $user->id,
+                        ]);
+
+                        $media = \App\Models\Media::updateOrCreate([
+                            'file_name' => 'defaultpicture.png',
+                            'type' => 'Image',
+                            'folder' => 'uploads',
+                            'path' =>  'uploads/defaultpicture.png',
+                            'mime_type' => 'image/png',
+                            'user_id' => $user->id,
+                        ]);
+                    }
+
+                    
                 }
             //}
         }

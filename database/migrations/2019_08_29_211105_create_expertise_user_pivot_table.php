@@ -15,8 +15,8 @@ class CreateExpertiseUserPivotTable extends Migration
     {
         Schema::create('expertise_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('expertise_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('expertise_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

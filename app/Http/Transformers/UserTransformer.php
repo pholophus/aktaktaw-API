@@ -13,12 +13,11 @@ class UserTransformer extends TransformerAbstract
     public function transform(UserModel $user)
     {
         return [
-            'no' => $user->id,
             'user_id' => $user->uuid,
             'name' => $user->profile->name,
             'email' => $user->email ?? '',
-            'user_status_id' => $user->user_status_id ?? '',
-            'translator_status_id' => $user->translator_status_id ?? '',
+            'user_status' => $user->user_status ?? '',
+            'translator_status' => $user->translator_status ?? '',
             'is_new' => $user->is_new ?? '',
             'role' => $this->roles($user) ?? '',
             'profile' =>  $this->profile($user) ?? '',
@@ -45,17 +44,13 @@ class UserTransformer extends TransformerAbstract
     public function wallet(UserModel $user)
     {
         $type = '';
-
-        if($user->wallet->type == 0){
-            $type = 'prepaid';
-        }else{
-            $type = 'postpaid';
-        }
+        //dd($user->wallet);
+        $type = $user->wallet->type == 0 ? 'prepaid' : 'postpaid';
 
         $item[] = [
             'id' => $user->wallet->uuid,
             'amount' => $user->wallet->amount,
-            'type' => $type,
+            'type' => $type ?? '',
             'status' => $user->wallet->status,
         ];
         return $item;

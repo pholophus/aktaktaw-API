@@ -25,12 +25,12 @@ class Kernel
             \App\Models\Role::class,
             \App\Models\Language::class,
             \App\Models\Base::class,
-            \App\Models\Type::class,
             \App\Models\Language::class,
             \App\Models\Notification::class,
             \App\Models\Booking::class,
             \App\Models\Profile::class,
             \App\Models\Expertise::class,
+            \App\Models\Media::class,
             \App\Models\Wallet::class,
             \App\Models\Fee::class,
 

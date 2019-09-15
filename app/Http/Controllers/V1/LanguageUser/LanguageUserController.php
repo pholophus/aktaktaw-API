@@ -59,10 +59,10 @@ class LanguageUserController extends Controller
     {
         return $this->response->errorNotFound("LanguageUser does not exists");
     }
-    public function TypeDoesNotExistsError()
-    {
-        return $this->response->errorNotFound("Type does not exists");
-    }
+    // public function TypeDoesNotExistsError()
+    // {
+    //     return $this->response->errorNotFound("Type does not exists");
+    // }
 
 
 }

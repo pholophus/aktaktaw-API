@@ -22,8 +22,8 @@ class ProfileTransformer extends TransformerAbstract
             'avatar_file_path' => $user->profile->avatar_file_path ?? '',
             'resume_file_path' => $user->profile->resume_file_path ?? '',
             'expertise' => $this->expertise($user) ?? '',
-            'user_status' => $user->user_status_id ?? '',
-            'translator_status' => $user->translator_status_id ?? '',
+            'user_status' => $user->user_status ?? '',
+            'translator_status' => $user->translator_status ?? '',
             'is_new' => $user->is_new ?? '',
             'wallet' => $this->wallet($user) ?? '',
             'roles' => $this->roles($user) ?? '',
@@ -46,7 +46,7 @@ class ProfileTransformer extends TransformerAbstract
         $item[] = [
             'id' => $user->wallet->uuid ?? '',
             'amount' => $user->wallet->amount ?? '',
-            'type' => $type,
+            'type' => $type ?? '',
             'status' => $user->wallet->status ?? '',
         ];
         return $item;
@@ -54,63 +54,87 @@ class ProfileTransformer extends TransformerAbstract
 
     public function languages(UserModel $user)
     {
-        $type = '';
+        //dd($user->userlanguages());
+        $languages = $user->languages()->get();
+        $item = [];
+        foreach($languages as $language)
+        {
+            $type = '';
+            if($language->pivot->language_type == 0){
+                $type = 'native';
+            }else if($language->pivot->language_type == 1){
+                $type = 'speaking';
+            }else{
+                $type = 'other';
+            }
 
-        if($user->languages()->value('language_type') == 0){
-            $type = 'native';
-        }else if($user->languages()->value('language_type') == 1){
-            $type = 'speaking';
-        }else{
-            $type = 'other';
+            $item[] = [
+                'id' => $language->uuid ?? '',
+                'name' => $language->language_name ?? '',
+                'type' => $type,
+            ];
         }
-
-        $item[] = [
-            'id' => $user->languages()->value('uuid') ?? '',
-            'name' => $user->languages()->value('language_name') ?? '',
-            'type' => $type,
-        ];
 
         return $item;
     }
 
     public function expertise(UserModel $user)
     {
-        $item[] = [
-            'id' => $user->expertises()->value('uuid') ?? '',
-            'name' => $user->expertises()->value('expertise_name') ?? '',
-            'status' => $user->expertises()->value('expertise_status') ?? '',
-            //'language_code' => $user->expertises()->where('language_type','=',1)->value('language_code') ?? '',
-        ];
+        $expertises = $user->expertises()->get();
+        $item = [];
+        foreach($expertises as $expertise)
+        {
+            $item[] = [
+                'id' => $expertise->uuid ?? '',
+                'name' => $expertise->expertise_name ?? '',
+                'status' => $expertise->expertise_status ?? '',
+                    //'language_code' => $user->expertises()->where('language_type','=',1)->value('language_code') ?? '',
+            ];
+        }
 
         return $item;
     }
     
     public function roles(UserModel $user)
     {
-        $item[] = [
-            'id' => $user->roles()->value('uuid') ?? '',
-            'name' => $user->roles()->value('name') ?? '',
-        ];
+        $roles = $user->roles()->get();
+        $item = [];
+        foreach($roles as $role)
+        {
+            $item[] = [
+                'id' => $role->uuid ?? '',
+                'name' => $role->name ?? '',
+            ];
+        }
 
         return $item;
     }
 
     public function booking(UserModel $user)
     {
+        
+        $bookings = $user->bookings()->get();
+        $item = [];
         $type = '';
 
-        if($user->bookings()->value('type') == 0){
-            $type = 'pre-booking';
-        }else{
-            $type = 'on-demand';
+        if ($user->bookings()->count() == 0)
+        {
+            return [];
         }
+        else
+        {
+            foreach($bookings as $booking)
+            {
+                $type = $booking->booking_type == 0 ?'pre-booking' : 'on-demand';
 
-        $item[] = [
-            'id' => $user->bookings()->value('uuid') ?? '',
-            'type' => $type,
-        ];
-
-        return $item;
+                $item[] = [
+                    'id' => $booking->uuid ?? '',
+                    'type' => $type,
+                ];
+            }
+        }
+            return $item;
     }
 }
+
 

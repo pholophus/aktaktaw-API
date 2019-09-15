@@ -12,7 +12,6 @@ class Language extends Validator
     {
         $this->rules['language_name'] = ['required'];
         $this->rules['language_code'] = ['required'];
-        $this->rules['language_type'] = ['required'];
         $this->rules['language_status'] = ['required'];
 
     }
@@ -21,7 +20,6 @@ class Language extends Validator
     {
         $this->rules['language_name'] = ['required'];
         $this->rules['language_code'] = ['required'];
-        $this->rules['language_type'] = ['required'];
         $this->rules['language_status'] = ['required'];
     }
 

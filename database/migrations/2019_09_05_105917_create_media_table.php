@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserLanguagesTable extends Migration
+class CreateMediaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateUserLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_languages', function (Blueprint $table) {
+        Schema::create('media', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('uuid')->unique();
+            $table->string('uuid')->nullable()->index();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('type_id')->nullable();
-            $table->string('language_name');
-            $table->string('language_code');
+            $table->string('file_name')->nullable();
+            $table->string('type')->nullable();
+            $table->string('folder')->nullable();
+            $table->string('path')->nullable();
+            $table->string('mime_type')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +34,6 @@ class CreateUserLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_languages');
+        Schema::dropIfExists('media');
     }
 }
