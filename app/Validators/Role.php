@@ -10,12 +10,10 @@ class Role extends Validator
 
     public function onCreate()
     {
-        $this->rules['role_name'] = ['required'];
-        $this->rules['display_name'] = ['required'];
+        $this->rules['name'] = ['required'];
     }
     public function onUpdate()
     {
-        $this->rules['role_name'] = ['required'];
-        $this->rules['display_name'] = ['required'];
+        $this->rules['name'] = ['required'];
     }
 }

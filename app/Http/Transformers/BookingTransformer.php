@@ -37,10 +37,10 @@ class BookingTransformer extends TransformerAbstract
     {
         $id = $booking->translator_id;
         $translator = $booking->user->where('id',$id)->first();
-
+//dd($translator->uuid);
             $item[] = [
-                'id' => $translator->uuid,
-                'name' => $translator->profile->first_name .' '. $translator->profile->last_name ?? '' ,
+                'id' => $translator->uuid ?? '',
+                'name' => $translator->profile->name ?? '' ,
             ];
  
         return $item;
@@ -49,11 +49,10 @@ class BookingTransformer extends TransformerAbstract
     {
         $creator = $booking->user;
         
-
         $item [] = [
             'id' => $creator->uuid ?? '',
-            'name' => $creator->profile->first_name .' '. $creator->profile->last_name ?? '' ,
-            'role_id' => $creator->role->first()->uuid ?? '',
+            'name' => $creator->profile->name ?? '' ,
+            'role_id' => $creator->roles()->first()->uuid ?? '',
         ];
         
         return $item;
@@ -67,7 +66,7 @@ class BookingTransformer extends TransformerAbstract
         //dd($requester);
         $item [] = [
             'id' => $requester->uuid ?? '',
-            'name' => $requester->profile->first_name .' '. $requester->profile->last_name ?? '' ,
+            'name' => $requester->profile->name ?? '' ,
         ];
         
         return $item;
@@ -77,22 +76,22 @@ class BookingTransformer extends TransformerAbstract
     {
         $expertise = $booking->expertise;
         $item[] = [
-            'id' => $expertise->uuid,
-            'name' => $expertise->name,
+            'id' => $expertise->uuid ?? '' ,
+            'name' => $expertise->expertise_name ?? '' ,
         ];
 
         return $item;
     }
-    // public function language(BookingModel $booking)
-    // {
-    //     $language = $booking->language;
-    //     $item[] = [
-    //         'id' => $language->uuid,
-    //         'name' => $language->language_name,
-    //     ];
+    public function language(BookingModel $booking)
+    {
+        $language = $booking->language;
+        $item[] = [
+            'id' => $language->uuid ?? '' ,
+            'name' => $language->language_name ?? '' ,
+        ];
 
-    //     return $item;
-    // }
+        return $item;
+    }
 
 
     //iqbal

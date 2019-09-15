@@ -24,51 +24,62 @@ class BookingSeeder extends Seeder
 
          $users = \App\Models\User::with('roles')->role('general_user')->get();
          $admins = \App\Models\User::with('roles')->role('administrator')->get();
-        $expertise = \App\Models\Expertise::all();
+        //$expertise = \App\Models\Expertise::all();
         //$languages =\App\Models\Language::all();
 
+        //bookings created by user
         foreach ($users as $user) {
             $translator = \App\Models\User::with('roles')->role('translator')->inRandomOrder()->get()->first();
+            //language based on translator's language
+            $language = $translator->languages()->inRandomOrder()->get()->first();
+            //expertise based on translator's expertise
+            $expertise = $translator->expertises()->inRandomOrder()->get()->first();
 
             $booking  = \App\Models\Booking::updateOrCreate([
                 
-               // 'origin' => 'user',
                 'booking_date' =>$faker->date(),
                 'booking_time' =>$faker->time(),
                 'booking_fee' =>'$' . mt_rand(1,50),
                 'call_duration' => mt_rand(1,60) . ' mins',
                 'end_call' => $faker->time(),
                 'booking_type' =>mt_rand(0,1),
+                'booking_status' =>mt_rand(0,1),
                 'notes' => $faker->sentence(6,true),
-                //'language_id' => mt_rand(1,$languages->count()),
+                'language_id' => $language->id,
                 'translator_id' => $translator->id,
                 'origin_id' => $user->id,
-                'expertise_id' => mt_rand(1,$expertise->count()),
+                'expertise_id' => $expertise->id,
                 'requester_id' => $user->id
             ]);               
             
         }
     
+        //bookings created by admin
         foreach ($admins as $admin) {
             $users = \App\Models\User::with('roles')->role('general_user')->inRandomOrder()->get()->first();
             $translator = \App\Models\User::with('roles')->role('translator')->inRandomOrder()->get()->first();
+            //language based on translator's language
+            $language = $translator->languages()->inRandomOrder()->get()->first();
+            //expertise based on translator's expertise
+            $expertise = $translator->expertises()->inRandomOrder()->get()->first();
 
             $booking  = \App\Models\Booking::updateOrCreate([
                 
-               // 'origin' => 'admin',
                 'booking_date' =>$faker->date(),
                 'booking_time' =>$faker->time(),
                 'booking_fee' =>'$' . mt_rand(1,50),
                 'call_duration' => mt_rand(1,60) . ' mins',
                 'end_call' => $faker->time(),
                 'booking_type' =>mt_rand(0,1),
+                'booking_status' =>mt_rand(0,1),
                 'notes' => $faker->sentence(6,true),
-                //'language_id' => mt_rand(1,$languages->count()),
+                'language_id' => $language->id,
                 'translator_id' => $translator->id,
                 'origin_id' => $admin->id,
-                'expertise_id' => mt_rand(1,$expertise->count()),
+                'expertise_id' =>$expertise->id,
                 'requester_id' => $users->id
-            ]);              
+            ]);
+                         
         } 
             
         // $users = \App\Models\User::all();
@@ -89,7 +100,7 @@ class BookingSeeder extends Seeder
         //             'type' => rand(0,1),
         //             // 'status_id' => rand(1,100),
         //         ]);
-        //         $booking->users()->sync($booking);               
+        //                        
         //     }
         // }
     }

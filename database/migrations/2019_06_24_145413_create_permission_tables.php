@@ -31,6 +31,7 @@ class CreatePermissionTables extends Migration
             $table->string('slug')->nullable();
             $table->string('name_display')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {

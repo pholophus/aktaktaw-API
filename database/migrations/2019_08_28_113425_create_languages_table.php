@@ -18,7 +18,6 @@ class CreateLanguagesTable extends Migration
             $table->string('uuid')->unique();
             $table->string('language_name');
             $table->string('language_code');
-            $table->integer('language_type');
             $table->integer('language_status')->default(0);
             $table->timestamps();
             $table->softDeletes();

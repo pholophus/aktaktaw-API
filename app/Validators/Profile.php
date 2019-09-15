@@ -14,13 +14,21 @@ class Profile extends Validator
         $this->rules['phone_no'] = ['required'];
     }
 
-    public function onUpdate()
+    public function onUpdateTranslator()
     {
         $this->rules['name'] = ['required'];
-        $this->rules['languages'] = ['required'];
-        $this->rules['image'] = ['required'];
-        $this->rules['resume'] = ['required'];
-        $this->rules['expertise'] = ['required'];
+        $this->rules['language_id'] = ['required'];
+        $this->rules['language_type'] = ['required'];
+        $this->rules['expertise_id'] = ['required'];
+        $this->rules['translator_status'] = ['required'];
+        $this->rules['is_new'] = ['required'];
+        $this->rules['phone_no'] = ['required'];
+    }
+    public function onUpdateUser()
+    {
+        $this->rules['name'] = ['required'];
+        $this->rules['language_id'] = ['required'];
+        $this->rules['language_type'] = ['required'];
         $this->rules['translator_status'] = ['required'];
         $this->rules['is_new'] = ['required'];
         $this->rules['phone_no'] = ['required'];

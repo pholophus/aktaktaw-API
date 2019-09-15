@@ -22,9 +22,15 @@ class User extends Validator
         //$this->rules['password'] = ['required'];
     }
 
-    public function onUpdate()
+    public function onUpdateTranslator()
     {
-        $this->rules['expertise'] = ['required'];
+        $this->rules['expertise_id'] = ['required'];
+        $this->rules['user_status'] = ['required'];
+        $this->rules['translator_status'] = ['required'];
+    }
+
+    public function onUpdateUser()
+    {
         $this->rules['user_status'] = ['required'];
         $this->rules['translator_status'] = ['required'];
     }

@@ -19,6 +19,11 @@ class NotificationController extends Controller
         return $this->response->errorNotFound("User does not exists");
     }
 
+    public function BookingDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("Booking does not exists");
+    }
+
     public function successful(){
         return response()->json(['status'=>'success','message'=>'successfully send notifications'],201);
     }

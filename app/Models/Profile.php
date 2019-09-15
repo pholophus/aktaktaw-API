@@ -17,7 +17,7 @@ class Profile extends Base
     ];
 
     protected $fillable = [
-        'name','phone_no','avatar_file_path','resume_file_path','user_id','wallet_id'
+        'name','phone_no','avatar_file_path','resume_file_path','user_id'
     ];
 
 

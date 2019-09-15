@@ -16,7 +16,7 @@ class LanguageTransformer extends TransformerAbstract
             'language_id' => $language->uuid,
             'language_name' => $language->language_name,
             'language_code' => $language->language_code,
-            'language_type' => $this->languages($language) ?? '',
+            //'language_type' => $this->languages($language) ?? '',
             'language_status' => $language->language_status,
         ];
     }

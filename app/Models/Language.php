@@ -14,10 +14,10 @@ class Language extends Base
     ];
 
     public function users(){
-        return $this->belongsToMany(User::class,'language_user','language_id','user_id');
+        return $this->belongsToMany(User::class,'language_user','language_id','user_id')->withTimestamps();
     }
 
-    public function type(){
-        return $this->belongsTo(Type::class,'language_id','id'); 
-    }
+    // public function userlanguages(){
+    //     return $this->hasMany(LanguageUser::class);
+    //  }
 }

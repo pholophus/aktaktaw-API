@@ -17,6 +17,7 @@ class CreateLanguageUserPivotTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('language_id');
             $table->unsignedBigInteger('user_id');
+            $table->integer('language_type');
             $table->timestamps();
             $table->softDeletes();
         });

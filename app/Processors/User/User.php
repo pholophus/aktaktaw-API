@@ -7,6 +7,7 @@ use App\Models\User as UserModel;
 use App\Models\Role as RoleModel;
 use App\Models\Profile as ProfileModel;
 use App\Models\Wallet as WalletModel;
+use App\Models\Expertise as ExpertiseModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Validators\User as Validator;
@@ -69,23 +70,35 @@ class User extends Processor
             return $listener->accountExistsError();
         }
 
-        $validator = $this->validator->on('create')->with($inputs);
-        if ($validator->fails()) {
-            return $listener->validationFailed($validator->getMessageBag());
+        //if user ada dalam deleted model. then restore
+        $chekdeleteduser = UserModel::where('email',$inputs['email'])->withTrashed()->first();
+        //if true, restore the user and update
+        if($chekdeleteduser)
+            $chekdeleteduser->restore();
+
+        $role = RoleModel::where('uuid',$inputs['role_id'])->first();
+        if(!$role){
+            return $listener->roleDoesNotExistsError();
         }
+        
 
         $user = UserModel::create([
             'email' => $inputs['email'],
             'password' => bcrypt($inputs['password']),
         ]);
 
-        $profile = $user->profile();
-        
-        $profile->create([
+        $id= UserModel::where('email',$inputs['email'])->first()->id;
+        $profile = ProfileModel::updateorcreate([
+            'user_id' => $id,
             'name' => $inputs['name'],
         ]);
 
-        $user->roles()->attach($inputs['role_id']);
+        $wallet = WalletModel::updateorcreate([
+            'user_id' => $id,
+        ]);
+
+
+        $user->roles()->attach($role->id);
 
        return setApiResponse('success','created','user');
     }
@@ -94,26 +107,64 @@ class User extends Processor
     {
         // if(!checkUserAccess('management'))
         //     return setApiResponse('error','access');
-        //use validator when retrieving input
-        $validator = $this->validator->on('update')->with($inputs);
-        if ($validator->fails()) {
-            throw new UpdateFailed('Could not update user', $validator->errors());
-        }
-        try {
-            $user = UserModel::where('uuid',$userUuid)->firstorfail();
-        } catch(ModelNotFoundException $e) {
-            return $listener->accountDoesNotExistsError();
-        }
 
-        $user->update([
-            'user_status' => $inputs['user_status'],
-            'translator_status' => $inputs['translator_status'],
-        ]);
-        $id = auth()->user()->id;
+        
+        if(UserModel::where('uuid',$userUuid)->firstorfail()->hasAnyRole('translator'))
+        {
+            //use validator when retrieving input
+            $validator = $this->validator->on('updateTranslator')->with($inputs);
+            if ($validator->fails()) {
+                throw new UpdateFailed('Could not update user', $validator->errors());
+            }
+            try {
+                $user = UserModel::where('uuid',$userUuid)->firstorfail();
+            } catch(ModelNotFoundException $e) {
+                return $listener->accountDoesNotExistsError();
+            }
 
-        $user->expertises()->where('user_id',$id)->sync([
-            'expertise_id' => $inputs['expertise'],
-        ]);
+            if(is_array($inputs['expertise_id'])){
+                $expertise = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
+                if(!$expertise){
+                    return $listener->ExpertiseDoesNotExistsError();
+                }
+            }else{
+                $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
+                if(!$expertise){
+                    return $listener->ExpertiseDoesNotExistsError();
+                }
+            }
+            
+            $user->update([
+                'user_status' => $inputs['user_status'],
+                'translator_status' => $inputs['translator_status'],
+            ]);
+            $id = auth()->user()->id;
+
+            $user->expertises()->where('user_id',$id)->sync([
+                'expertise_id' => $expertise->id,
+            ]);
+        }
+        else
+        {
+            //use validator when retrieving input
+            $validator = $this->validator->on('updateUser')->with($inputs);
+            if ($validator->fails()) {
+                throw new UpdateFailed('Could not update user', $validator->errors());
+            }
+
+            try {
+                $user = UserModel::where('uuid',$userUuid)->firstorfail();
+            } catch(ModelNotFoundException $e) {
+                return $listener->accountDoesNotExistsError();
+            }
+
+            $user->update([
+                'user_status' => $inputs['user_status'],
+                'translator_status' => $inputs['translator_status'],
+            ]);
+
+
+        }
 
         return setApiResponse('success','updated','user');
     }

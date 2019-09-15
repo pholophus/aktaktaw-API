@@ -11,7 +11,7 @@ class Notification extends Base
     protected $fillable = [
         'title',
         'description',
-        'order_id',
+        'booking_id',
         'user_id'
     ];
     protected $searchable = [

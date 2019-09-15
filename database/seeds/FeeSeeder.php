@@ -17,18 +17,16 @@ class FeeSeeder extends Seeder
         $this->command->info('Fee Seed');
 
 
-            $arrX = array(1,5,10);
         for ($i=0; $i<7; $i++) {
-            //for ($i = 0; $i < 10; $i++) {
+                $arrX = array(1,5,10);
                 $fee  = \App\Models\Fee::updateOrCreate([
-                    'fee_name' => $faker->name,
+                    'fee_name' => $faker->word,
                     'fee_duration' => rand(5,60),
-                    'fee_rate' => array_rand($arrX),
+                    'fee_rate' => $arrX[array_rand($arrX)],
                     'fee_status' => rand(0,1),
                 ]);
 
                 $fee->expertises()->attach($fee);
-            //}
         }
     }
 }

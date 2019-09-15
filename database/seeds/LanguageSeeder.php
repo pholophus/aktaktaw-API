@@ -28,25 +28,25 @@ class LanguageSeeder extends Seeder
             "Italian" => "it"
         ];
 
-        
-        for ($i = 0; $i < 10; $i++) {  
+        $i=0;
+        foreach ($languages as $language) {  
             
             $language = array_keys($languages);
-            $lang = $language[mt_rand(0,8)];
+            $lang = $language[$i];
             $code = $languages[$lang];
 
             $language = \App\Models\Language::updateOrCreate([
                 'language_name' => $lang,
                 'language_code' => $code,
-                'language_type' => mt_rand(0,3),
                 'language_status' => mt_rand(0,1),
             ]);
+            $i++;
 
             //$languageID = \App\Models\Language::updateOrCreate([
             //    'id'=> mt_rand(1,10),
             //]);
 
-            $language->users()->sync($language);       
+           // $language->users()->sync($language);       
         }
     }
 }

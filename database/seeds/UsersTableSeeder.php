@@ -50,8 +50,7 @@ class UsersTableSeeder extends Seeder
                     if($user->hasRole('translator')) 
                     {
                         $profile = \App\Models\Profile::updateOrCreate([
-                            'first_name' => $faker->firstName,
-                            'last_name' => $faker->lastName,
+                            'name' => $faker->name,
                             'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
                             'avatar_file_path' => asset('uploads/defaultpicture.png'),
                             'resume_file_path' =>  asset('uploads/dummy.pdf'),
@@ -75,16 +74,16 @@ class UsersTableSeeder extends Seeder
                             'user_id' => $user->id,
                         ]);
 
-                        $userExpertise = \App\Models\UserExpertise::updateOrCreate([
+                        $userExpertise = \App\Models\ExpertiseUser::updateOrCreate([
                             'user_id'=> $user->id,
                             'expertise_id'=> $expertises[mt_rand(0,6)]->id,
                         ]);
+                        
                     }
                     else
                     {
                         $profile = \App\Models\Profile::updateOrCreate([
-                            'first_name' => $faker->firstName,
-                            'last_name' => $faker->lastName,
+                            'name' => $faker->name,
                             'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
                             'avatar_file_path' => asset('uploads/defaultpicture.png'),
                             'user_id' => $user->id,

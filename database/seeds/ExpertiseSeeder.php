@@ -33,7 +33,7 @@ class ExpertiseSeeder extends Seeder
                     'slug' => str_slug($arr,'_'),
                 ]);
 
-                $expertise->users()->sync($expertise);
+                //$expertise->users()->sync($expertise);
             //}
         }
     }

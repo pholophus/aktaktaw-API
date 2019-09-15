@@ -51,5 +51,9 @@ class ExpertiseController extends Controller
     {
         return $this->response->errorNotFound("expertise does not exists");
     }
+    public function FeeDoesNotExistsError()
+    {
+        return $this->response->errorNotFound("fee does not exists");
+    }
 
 }

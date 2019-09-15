@@ -27,7 +27,7 @@ class Expertise extends Base
     //     return $this-hasOne(Booking::class);
     // }
     public function users(){
-        return $this->belongsToMany(User::class,'expertise_user','expertise_id','user_id');
+        return $this->belongsToMany(User::class,'expertise_user','expertise_id','user_id')->withTimestamps();
     }
     public function booking()
     {
@@ -35,7 +35,7 @@ class Expertise extends Base
     }
 
     public function fees(){
-        return $this->belongsToMany(Fee::class,'expertise_fee','expertise_id','fee_id');
+        return $this->belongsToMany(Fee::class,'expertise_fee','expertise_id','fee_id')->withTimestamps();
     }
     
 }

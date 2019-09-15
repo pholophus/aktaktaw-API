@@ -23,6 +23,7 @@ class CreateMediaTable extends Migration
             $table->string('path')->nullable();
             $table->string('mime_type')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

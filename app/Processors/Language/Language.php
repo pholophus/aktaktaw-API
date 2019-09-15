@@ -4,7 +4,6 @@ namespace App\Processors\Language;
 
 use Carbon\Carbon;
 use App\Models\Language as LanguageModel;
-use App\Models\Type as TypeModel;
 
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
@@ -38,7 +37,6 @@ class Language extends Processor
         LanguageModel::create([
             'language_name' => $inputs['language_name'],
             'language_code' => $inputs['language_code'],
-            'language_type' => $inputs['language_type'],
             'language_status' => $inputs['language_status'],
         ]);
 
@@ -73,7 +71,6 @@ class Language extends Processor
         $Language->update([
             'language_name' => $inputs['language_name'],
             'language_code' => $inputs['language_code'],
-            'language_type' => $inputs['language_type'],
             'language_status' => $inputs['language_status'],
         ]);
 

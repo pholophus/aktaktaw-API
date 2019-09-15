@@ -26,8 +26,8 @@ class RoleSeeder extends Seeder
                 ],
                 [
                     'guard_name' => 'api',
-                    'slug' =>  str_slug($role),
-                    'name_display' =>  str_slug($role, '_')
+                    'slug' =>  str_slug($role,'_'),
+                    'name_display' =>  ucwords($role),
                 ]
             );
         }

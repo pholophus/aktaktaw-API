@@ -13,7 +13,6 @@ class UserTransformer extends TransformerAbstract
     public function transform(UserModel $user)
     {
         return [
-            'no' => $user->id,
             'user_id' => $user->uuid,
             'name' => $user->profile->name,
             'email' => $user->email ?? '',
@@ -45,17 +44,13 @@ class UserTransformer extends TransformerAbstract
     public function wallet(UserModel $user)
     {
         $type = '';
-
-        if($user->wallet->type == 0){
-            $type = 'prepaid';
-        }else{
-            $type = 'postpaid';
-        }
+        //dd($user->wallet);
+        $type = $user->wallet->type == 0 ? 'prepaid' : 'postpaid';
 
         $item[] = [
             'id' => $user->wallet->uuid,
             'amount' => $user->wallet->amount,
-            'type' => $type,
+            'type' => $type ?? '',
             'status' => $user->wallet->status,
         ];
         return $item;

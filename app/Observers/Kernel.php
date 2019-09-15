@@ -25,7 +25,6 @@ class Kernel
             \App\Models\Role::class,
             \App\Models\Language::class,
             \App\Models\Base::class,
-            \App\Models\Type::class,
             \App\Models\Language::class,
             \App\Models\Notification::class,
             \App\Models\Booking::class,

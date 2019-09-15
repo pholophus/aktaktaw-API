@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\User as UserModel;
 use App\Models\Media as MediaModel;
 use App\Models\Profile as ProfileModel;
+use App\Models\Expertise as ExpertiseModel;
+use App\Models\Language as LanguageModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Validators\Profile as Validator;
@@ -40,35 +42,105 @@ class Profile extends Processor
     public function update($listener, array $inputs)
     {
         //use validator when retrieving input
+        //dd(auth()->user()->hasAnyRole('translator'));
         if  (!Input::has('avatar_file_path') && !Input::hasFile('resume_file_path')) 
         {
-            $validator = $this->validator->on('update')->with($inputs);
-            if ($validator->fails()) {
-                throw new UpdateFailed('Could not update user', $validator->errors());
+            if(auth()->user()->hasAnyRole('translator'))
+            {
+                $validator = $this->validator->on('updateTranslator')->with($inputs);
+                if ($validator->fails()) {
+                    throw new UpdateFailed('Could not update user', $validator->errors());
+                }
+
+                if(is_array($inputs['expertise_id'])){
+                    $expertise = ExpertiseModel::whereIn('uuid',$inputs['expertise_id'])->get();
+                    if(!$expertise){
+                        return $listener->ExpertiseDoesNotExistsError();
+                    }
+                }else{
+                    $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
+                    if(!$expertise){
+                        return $listener->ExpertiseDoesNotExistsError();
+                    }
+                }
+
+                if(is_array($inputs['language_id'])){
+                    $language = LanguageModel::whereIn('uuid',$inputs['language_id'])->get();
+                    if(!$language){
+                        return $listener->LanguageDoesNotExistsError();
+                    }
+                }else{
+                    $language = LanguageModel::where('uuid',$inputs['language_id'])->first();
+                    if(!$language){
+                        return $listener->LanguageDoesNotExistsError();
+                    }
+                }
+
+                $profile = auth()->user()->profile();
+                $profile->update([
+                    'name' =>  $inputs['name'] ,
+                    'phone_no' => cleanPhoneNumber($inputs['phone_no']),
+                ]);
+
+                $user = auth()->user();
+
+                $user->update([
+                    'translator_status_id' => $inputs['translator_status'],
+                    'is_new' => $inputs['is_new']
+                ]);
+
+                $id = auth()->user()->id;
+
+                $user->languages()->where('user_id',$id)->sync([
+                    'language_id' => $language->id,
+                    'language_type' => $language->language_type,
+
+                ]);
+
+                $user->expertises()->where('user_id',$id)->sync([
+                    'expertise_id' => $expertise->id,
+                ]);
             }
-            $profile = auth()->user()->profile();
-            $profile->update([
-                'first_name' =>  $inputs['first_name'] ,
-                'last_name' =>  $inputs['last_name'] ,
-                'phone_no' => cleanPhoneNumber($inputs['phone_no']),
-            ]);
+            else{
+            
+                $validator = $this->validator->on('updateUser')->with($inputs);
+                if ($validator->fails()) {
+                    throw new UpdateFailed('Could not update user', $validator->errors());
+                }
 
-            $user = auth()->user();
+                if(is_array($inputs['language_id'])){
+                    $language = LanguageModel::whereIn('uuid',$inputs['language_id'])->get();
+                    if(!$language){
+                        return $listener->LanguageDoesNotExistsError();
+                    }
+                }else{
+                    $language = LanguageModel::where('uuid',$inputs['language_id'])->first();
+                    if(!$language){
+                        return $listener->LanguageDoesNotExistsError();
+                    }
+                }
+                
+                $profile = auth()->user()->profile();
+                $profile->update([
+                    'name' =>  $inputs['name'] ,
+                    'phone_no' => cleanPhoneNumber($inputs['phone_no']),
+                ]);
 
-            $user->update([
-                'translator_status_id' => $inputs['translator_status'],
-                'is_new' => $inputs['is_new']
-            ]);
+                $user = auth()->user();
 
-            $id = auth()->user()->id;
+                $user->update([
+                    'translator_status_id' => $inputs['translator_status'],
+                    'is_new' => $inputs['is_new']
+                ]);
 
-            $user->languages()->where('user_id',$id)->sync([
-                'language_id' => $inputs['languages'],
-            ]);
+                $id = auth()->user()->id;
 
-            $user->expertises()->where('user_id',$id)->sync([
-                'expertise_id' => $inputs['expertise'],
-            ]);
+                $user->languages()->where('user_id',$id)->sync([
+                    'language_id' => $language->id,
+                    'language_type' => $language->language_type,
+                ]);
+
+            }
         }
 
        if(Input::hasFile('avatar_file_path')){
@@ -137,7 +209,7 @@ class Profile extends Processor
             'password' => bcrypt($password),
         ]);
         
-        return setApiResponse('success','updated','user password');
+        return setApiResponse('success','updated','');
     }
 
 }

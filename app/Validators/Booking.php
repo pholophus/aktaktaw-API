@@ -17,10 +17,11 @@ class Booking extends Validator
         $this->rules['call_duration'] = ['required'];
         $this->rules['end_call'] = ['required'];
         $this->rules['notes'] = ['required'];        
-        //$this->rules['language_id'] = ['required'];
+        $this->rules['language_id'] = ['required'];
         $this->rules['requester_id'] = ['required'];
-        $this->rules['translator_id'] = ['required'];            
-        $this->rules['expertise_id'] = ['required'];        
+        //$this->rules['translator_id'] = ['required'];            
+        $this->rules['expertise_id'] = ['required'];   
+        $this->rules['booking_status'] = ['required'];     
     
     }
 
@@ -33,7 +34,7 @@ class Booking extends Validator
         $this->rules['notes'] = ['required'];        
         $this->rules['booking_fee'] = ['required'];
         $this->rules['booking_status'] = ['required'];
-        $this->rules['translator_id'] = ['required'];            
+        //$this->rules['translator_id'] = ['required'];            
     }
 
     public function onSearch()

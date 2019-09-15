@@ -24,14 +24,22 @@ class ExpertiseTransformer extends TransformerAbstract
 
     public function fee(ExpertiseModel $expertise)
     {
+        $expertises = $expertise->fees()->get();
+        $item = [];
+        foreach($expertises as $expertise)
+        {
+           
         $item[] = [
-            'id' => $expertise->fees()->value('uuid') ?? '',
-            'name' => $expertise->fees()->value('fee_name') ?? '',
-            'duration' => $expertise->fees()->value('fee_duration') ?? '',
-            'rate' => $expertise->fees()->value('fee_rate') ?? '',
-            'status' => $expertise->fees()->value('fee_status') ?? '',
+            
+            'id' => $expertise->uuid ?? '',
+            'name' => $expertise->fee_name ?? '',
+            'duration' => $expertise->fee_duration ?? '',
+            'rate' => $expertise->fee_rate ?? '',
+            'status' => $expertise->fee_status ?? '',
             //'language_code' => $expertise->expertises()->where('language_type','=',1)->value('language_code') ?? '',
         ];
+        }
+
 
         return $item;
     }

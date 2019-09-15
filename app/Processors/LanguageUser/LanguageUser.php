@@ -4,7 +4,6 @@ namespace App\Processors\LanguageUser;
 
 use Carbon\Carbon;
 use App\Models\Language as LanguageUserModel;
-use App\Models\Type as TypeModel;
 
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
@@ -52,22 +51,7 @@ class LanguageUser extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        // $type = TypeModel::create([
-        //     'name' => $inputs['name'],
-        //     'category' => $inputs['category'],
-        // ]);
-
-        if(is_array($inputs['type_id'])){
-            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
-            if(!$types){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }else{
-            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
-            if(!$type){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }
+        
 
         $User = auth()->user()->id;
         LanguageUserModel::create([
@@ -115,17 +99,6 @@ class LanguageUser extends Processor
             return $listener->LanguageUserDoesNotExistsError();
         }
 
-        if(is_array($inputs['type_id'])){
-            $types = TypeModel::whereIn('uuid',$inputs['type_id'])->get();
-            if(!$types){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }else{
-            $type = TypeModel::where('uuid',$inputs['type_id'])->first();
-            if(!$type){
-                return $listener->TypeDoesNotExistsError();
-            }
-        }
 
         $LanguageUser->update([
             'language_name' => $inputs['language_name'],

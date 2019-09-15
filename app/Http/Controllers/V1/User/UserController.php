@@ -77,7 +77,7 @@ class UserController extends Controller
         return $this->response->errorNotFound("Account already exists, please use another email");
     }
 
-    public function roleNotExists()
+    public function roleDoesNotExistsError()
     {
         return $this->response->errorNotFound("Role Does not Exist");
     }

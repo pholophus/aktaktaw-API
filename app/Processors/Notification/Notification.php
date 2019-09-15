@@ -11,6 +11,7 @@ use App\Validators\Notification as Validator;
 use Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Booking as BookingModel;
 use Dingo\Api\Exception\StoreResourceFailedException as StoreFailed;
 use Dingo\Api\Exception\DeleteResourceFailedException as DeleteFailed;
 use Dingo\Api\Exception\ResourceException as ResourceFailed;
@@ -31,10 +32,16 @@ class Notification extends Processor
             throw new StoreFailed('Could not send notifications', $validator->errors());
         }
 
+        $booking = BookingModel::where('uuid',$inputs['booking_id'])->first();
+        if(!$booking){
+            return $listener->BookingDoesNotExistsError();
+        }
+
         NotificationModel::create([
             'user_id' => auth()->user()->id,
             'title' =>  $inputs['title'],
             'description' =>  $inputs['description'], //global , personal, group
+            'booking_id' => $booking->id,
         ]);
 
         return $listener->successful();

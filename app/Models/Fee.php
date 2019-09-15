@@ -13,6 +13,6 @@ class Fee extends Base
     ];
 
     public function expertises(){
-        return $this->belongsToMany(Expertise::class,'expertise_fee','fee_id','expertise_id');
+        return $this->belongsToMany(Expertise::class,'expertise_fee','fee_id','expertise_id')->withTimestamps();
     }
 }

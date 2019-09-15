@@ -4,17 +4,16 @@ namespace App\Processors\Booking;
 
 use Carbon\Carbon;
 use App\Models\Booking as BookingModel;
-use App\Models\Type as TypeModel;
 use App\Models\Role as RoleModel;
 use App\Models\Expertise as ExpertiseModel;
 use App\Models\User as UserModel;
-
+use App\Models\Language as LanguageModel;
 use App\Processors\Processor;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Validators\Booking as Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\Builder;
 use Dingo\Api\Exception\StoreResourceFailedException as StoreFailed;
 use Dingo\Api\Exception\DeleteResourceFailedException as DeleteFailed;
 use Dingo\Api\Exception\ResourceException as ResourceFailed;
@@ -60,68 +59,75 @@ class Booking extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        //     $language = languageModel::where('uuid',$inputs['language_id'])->first();
-        //     if(!$language){
-        //         return $listener->LanguageDoesNotExistsError();
-        //     }
+        $language = LanguageModel::where('uuid',$inputs['language_id'])->first();
+        if(!$language){
+            return $listener->LanguageDoesNotExistsError();
+        }
 
         $expertise = ExpertiseModel::where('uuid',$inputs['expertise_id'])->first();
         if(!$expertise){
             return $listener->ExpertiseDoesNotExistsError();
         }
-
-        $translator = UserModel::where('uuid',$inputs['translator_id'])->with('roles')->role('translator')->first();
-            if(!$translator){
-                return $listener->TranslatorDoesNotExistsError();
-            }
-
-            // $hasExpertises = $translator->expertise;
-            // foreach( $hasExpertises as $hasExpertise)
-            // {
-            //     if(!$hasExpertise->where('expertise_id',$inputs['expertise_id'])){
-            //      return $listener->TranslatorDoesNotHaveThisExpertiseError();
-            //     }
-            // }
-
-            // $hasLanguages = $translator->language;
-            // foreach($hasLanguages as $hasLanguage)
-            // {
-            //     if(!$hasLanguage->where('language_id',$inputs['language_id'])){
-            //      return $listener->TranslatorDoesNotHaveThisLanguageError();
-            //     }
-            // }
-
+       
         $requester = UserModel::where('uuid',$inputs['requester_id'])->role('general_user')->first();
         if(!$requester){
             return $listener->RequesterDoesNotExistsError();
         }
-        
 
+        if(isset($inputs['translator_id']))
+        {
+            $translator = UserModel::where('uuid',$inputs['translator_id'])->with('roles')->role('translator')->first();
+            if(!$translator){
+                return $listener->TranslatorDoesNotExistsError();
+            }
+
+            //check whether the translator has the expertise
+            $hasExpertises = $translator->expertises->where('id',$expertise->id)->first();
+            if(!$hasExpertises){
+                return $listener->TranslatorDoesNotHaveThisExpertiseError();
+            }
+
+            //check whether the translator has the language
+            $hasLanguages = $translator->languages->where('id',$language->id)->first();
+            if(!$hasLanguages){
+            return $listener->TranslatorDoesNotHaveThisLanguageError();
+            }
+
+        }
+        else{
+
+            $translator = UserModel::whereHas('languages', function($q) use($language) {
+            $q->where('language_id', $language->id);
+            })->whereHas('expertises', function($q) use ($expertise){
+            $q->where('expertise_id', $expertise->id);
+            })->where('translator_status',1)->orderBy('booked','asc')->first();
+
+            if(!$translator){
+                return $listener->BookingError();
+            }
+
+        }
+  
        // $origin = auth()->user()->role('administrator') ? 'admin' : 'user';
-
-        $user = UserModel::whereHas('languages', function($q) use($inputs) {
-            $q->where('language_id', $inputs['language']);
-        })->whereHas('expertises', function($q) use ($inputs){
-            $q->where('expertise_id', $inputs['expertise']);
-        })->where('translator_status_id',0)->orderBy('booked','asc')->first();
         
         BookingModel::create([
-            //'origin' =>  $origin,
             'booking_date' =>  $inputs['booking_date'],
             'booking_time' =>  $inputs['booking_time'],
             'booking_type' => $inputs['booking_type'],
+            'booking_status' => $inputs['booking_status'],
             'end_call' =>  $inputs['end_call'],
             'call_duration' => $inputs['call_duration'],
             'notes' =>  $inputs['notes'],
             'origin_id' => auth()->user()->id,
-            'translator_id' =>$translator->id,
             'booking_fee' => $inputs['booking_fee'],
-            //'language_id'=> $language->id,
-            'expertise_id'=> $expertise->id, //'expertise_id'=> $inputs['expertise'],
+            'translator_id' =>$translator->id,
+            'language_id'=> $language->id,
+            'expertise_id'=> $expertise->id, 
             'requester_id'=> $requester->id,
-            //'status_id'=>
 
         ]);
+
+         $translator->increment('booked',1);
 
         return setApiResponse('success', 'created', 'booking');
     }
@@ -141,22 +147,57 @@ class Booking extends Processor
             return $listener->bookingDoesNotExistsError();
         }
 
-        $translator = UserModel::where('uuid',$inputs['translator_id'])->role('translator')->first();
+        $language = LanguageModel::where('id',$booking->language_id)->first();  
+        $expertise = ExpertiseModel::where('id',$booking->expertise_id)->first();
+
+        if(isset($inputs['translator_id']))
+        {   
+            //dd($language);
+            $translator = UserModel::where('uuid',$inputs['translator_id'])->with('roles')->role('translator')->first();
             if(!$translator){
                 return $listener->TranslatorDoesNotExistsError();
             }
+
+            //check whether the translator has the expertise
+            $hasExpertises = $translator->expertises->where('id',$expertise->id)->first();
+            if(!$hasExpertises){
+                return $listener->TranslatorDoesNotHaveThisExpertiseError();
+            }
+            
+            //check whether the translator has the language
+            $hasLanguages = $translator->languages->where('id',$language->id)->first();
+            if(!$hasLanguages){
+            return $listener->TranslatorDoesNotHaveThisLanguageError();
+            }
+
+        }
+        else{
+
+            $translator = UserModel::whereHas('languages', function($q) use($language) {
+            $q->where('language_id', $language->id);
+            })->whereHas('expertises', function($q) use ($expertise){
+            $q->where('expertise_id', $expertise->id);
+            })->where('translator_status',1)->orderBy('booked','asc')->first();
+
+            if(!$translator){
+                return $listener->BookingError();
+            }
+
+        }
 
         $booking->update([
             //'origin' =>  $inputs['origin'],
             'booking_date' =>  $inputs['booking_date'],
             'booking_time' =>  $inputs['booking_time'],
             'booking_fee' => $inputs['booking_fee'],
+            'translator_id' =>$translator->id,
             'booking_status' => $inputs['booking_status'],
             'call_duration' =>  $inputs['call_duration'],
             'end_call' =>  $inputs['end_call'],
             'notes' =>  $inputs['notes'],
-            'translator_id' => $translator->id
         ]);
+        $translator->increment('booked',1);
+
         return setApiResponse('success', 'updated', 'booking');
     }
     public function delete($listener, $bookingUuid)
