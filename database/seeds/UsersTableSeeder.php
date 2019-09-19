@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
                         'amount' => rand(1,20),
                     ]);
 
-                    if(! $user->hasRole($role)) {
+                    if(!$user->hasRole($role)) {
                         $user->assignRole($role);
                     }
 
