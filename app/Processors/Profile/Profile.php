@@ -91,10 +91,10 @@ class Profile extends Processor
 
                 $id = auth()->user()->id;
 
-                $user->languages()->where('user_id',$id)->sync([
+                $user->languages()->update([
+                    'user_id' => $id,
                     'language_id' => $language->id,
-                    'language_type' =>$inputs['language_type'],
-
+                    'language_type' => $inputs['language_type'],
                 ]);
 
                 $user->expertises()->where('user_id',$id)->sync([
