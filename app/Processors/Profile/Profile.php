@@ -93,7 +93,7 @@ class Profile extends Processor
 
                 $user->languages()->where('user_id',$id)->sync([
                     'language_id' => $language->id,
-                    'language_type' => $language->language_type,
+                    'language_type' =>$inputs['language_type'],
 
                 ]);
 
