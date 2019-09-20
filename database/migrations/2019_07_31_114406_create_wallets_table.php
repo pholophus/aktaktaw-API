@@ -19,7 +19,7 @@ class CreateWalletsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->integer('amount')->default(0);
             $table->integer('type')->default(0);
-            $table->integer('status')->default(0);
+            $table->integer('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
