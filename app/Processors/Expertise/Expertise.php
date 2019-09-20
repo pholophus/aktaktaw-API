@@ -3,6 +3,7 @@
 namespace App\Processors\Expertise;
 
 use Carbon\Carbon;
+use DB;
 use App\Models\Expertise as ExpertiseModel;
 use App\Models\Fee as FeeModel;
 
@@ -20,7 +21,8 @@ class Expertise extends Processor
     }
 
     public function index($listener){
-        $expertise = ExpertiseModel::paginate(15);
+
+        $expertise = ExpertiseModel::where('is_active', 1)->paginate(15);
         return $listener->showExpertiseListing($expertise);
     }
 
@@ -29,7 +31,7 @@ class Expertise extends Processor
             return $listener->expertiseDoesNotExistsError();
         }
         try {
-            $expertise = ExpertiseModel::where('uuid',$expertiseUuid)->firstorfail();
+            $expertise = ExpertiseModel::where('uuid', $expertiseUuid)->firstorfail();
         } catch(ModelNotFoundException $e) {
             return $listener->expertiseDoesNotExistsError();
         }
@@ -43,15 +45,16 @@ class Expertise extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        $fee = FeeModel::where('uuid',$inputs['fee_rate'])->first();
+        $fee = FeeModel::where('uuid', $inputs['fee_rate'])->first();
         if(!$fee){
             return $listener->FeeDoesNotExistsError();
         }
 
         $expertise = ExpertiseModel::updateOrcreate([
-            'expertise_name' =>  $inputs['expertise_name'],
+            'name' =>  $inputs['name'],
         ],[
-            'slug'=>  str_slug($inputs['expertise_name']),
+            'is_active' => $inputs['is_active'],
+            'slug'=>  str_slug($inputs['name']),
         ]);
 
         $expertise->fees()->attach($fee->id);
@@ -67,7 +70,7 @@ class Expertise extends Processor
             return $listener->validationFailed($validator->getMessageBag());
         }
         try {
-            $expertise = ExpertiseModel::where('uuid',$expertiseUuid)->firstorfail();
+            $expertise = ExpertiseModel::where('uuid', $expertiseUuid)->firstorfail();
         } catch(ModelNotFoundException $e) {
             return $listener->expertiseDoesNotExistsError();
         }
@@ -78,19 +81,18 @@ class Expertise extends Processor
         }
 
         $expertise->update([
-            'expertise_name' =>  $inputs['expertise_name'],
-            'slug'=>  str_slug($inputs['expertise_name']),
-            'expertise_status' => $inputs['expertise_status'],
+            'name' =>  $inputs['name'],
+            'slug'=>  str_slug($inputs['name']),
+            'is_active' => $inputs['is_active'],
         ]);
 
-        $id = ExpertiseModel::where('uuid',$expertiseUuid)->value('id');
-
-        $expertise->fees()->where('expertise_id',$id)->sync([
-            'fee_id' => $fee->id,
+        $expertise->fees()->where('id', $expertise->id)->sync([
+            'id' => $fee->id,
         ]);
 
         return setApiResponse('success','updated','expertise');
     }
+    
     public function delete($listener,$expertiseUuid)
     {
         if(!$expertiseUuid){
@@ -98,7 +100,7 @@ class Expertise extends Processor
         }
 
         try {
-            $expertise = ExpertiseModel::where('uuid',$expertiseUuid)->firstorfail();
+            $expertise = ExpertiseModel::where('uuid', $expertiseUuid)->firstorfail();
         } catch(ModelNotFoundException $e) {
             return $listener->expertiseDoesNotExistsError();
         }

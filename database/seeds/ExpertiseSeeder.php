@@ -28,8 +28,8 @@ class ExpertiseSeeder extends Seeder
         foreach ($array as $arr) {
             //for ($i = 0; $i < 10; $i++) {
                 $expertise  = \App\Models\Expertise::updateOrCreate([
-                    'expertise_name' => $arr,
-                    'expertise_status' => rand(0,1),
+                    'name' => $arr,
+                    'is_active' => rand(0,1),
                     'slug' => str_slug($arr,'_'),
                 ]);
 
