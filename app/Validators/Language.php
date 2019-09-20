@@ -10,17 +10,17 @@ class Language extends Validator
 
     public function onCreate()
     {
-        $this->rules['language_name'] = ['required'];
-        $this->rules['language_code'] = ['required'];
-        $this->rules['language_status'] = ['required'];
+        $this->rules['name'] = ['required'];
+        $this->rules['code'] = ['required'];
+        $this->rules['is_active'] = ['required'];
 
     }
 
     public function onUpdate()
     {
-        $this->rules['language_name'] = ['required'];
-        $this->rules['language_code'] = ['required'];
-        $this->rules['language_status'] = ['required'];
+        $this->rules['name'] = ['required'];
+        $this->rules['code'] = ['required'];
+        $this->rules['is_active'] = ['required'];
     }
 
 }
