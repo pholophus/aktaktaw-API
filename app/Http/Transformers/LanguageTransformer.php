@@ -13,28 +13,11 @@ class LanguageTransformer extends TransformerAbstract
     public function transform(LanguageModel $language)
     {
         return [
-            'language_id' => $language->uuid,
-            'language_name' => $language->language_name,
-            'language_code' => $language->language_code,
+            'id' => $language->uuid,
+            'name' => $language->name,
+            'code' => $language->code,
             //'language_type' => $this->languages($language) ?? '',
-            'language_status' => $language->language_status,
+            'is_active' => $language->is_active == 1 ? true : false,
         ];
-    }
-
-    public function languages(LanguageModel $language)
-    {
-        $type = '';
-
-        if($language->language_type == 0){
-            $type = 'Native Language';
-        }else if($language->language_type == 1){
-            $type = 'Speaking Language';
-        }else if($language->language_type == 2){
-            $type = 'Other Language';
-        }else{
-            $type = 'Booking Language';
-        }
-
-        return $type;
     }
 }
