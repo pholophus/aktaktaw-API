@@ -70,8 +70,9 @@ class ProfileTransformer extends TransformerAbstract
 
             $item[] = [
                 'id' => $language->uuid ?? '',
-                'name' => $language->language_name ?? '',
+                'name' => $language->name ?? '',
                 'type' => $type,
+                'flag_url' => $language->flag_url,
             ];
         }
 
