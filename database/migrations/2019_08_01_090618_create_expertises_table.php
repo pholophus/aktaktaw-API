@@ -16,10 +16,10 @@ class CreateExpertisesTable extends Migration
         Schema::create('expertises', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid')->nullable()->index();
-            $table->string('expertise_name');
+            $table->string('name');
             $table->string('slug')->nullable();
            // $table->integer('booking_id')->nullable();
-            $table->integer('expertise_status')->default(0);
+            $table->integer('is_active')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
