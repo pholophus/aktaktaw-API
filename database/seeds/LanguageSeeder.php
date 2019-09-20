@@ -36,9 +36,9 @@ class LanguageSeeder extends Seeder
             $code = $languages[$lang];
 
             $language = \App\Models\Language::updateOrCreate([
-                'language_name' => $lang,
-                'language_code' => $code,
-                'language_status' => mt_rand(0,1),
+                'name' => $lang,
+                'code' => $code,
+                'is_active' => mt_rand(0,1),
             ]);
             $i++;
 

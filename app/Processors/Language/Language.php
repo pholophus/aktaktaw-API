@@ -23,7 +23,7 @@ class Language extends Processor
     }
 
     public function index($listener){
-        $Language = LanguageModel::paginate(15);
+        $Language = LanguageModel::where('is_active', 1)->paginate(15);
         return $listener->showLanguageListing($Language);
     }
 
@@ -35,9 +35,10 @@ class Language extends Processor
         }
 
         LanguageModel::create([
-            'language_name' => $inputs['language_name'],
-            'language_code' => $inputs['language_code'],
-            'language_status' => $inputs['language_status'],
+            'name' => $inputs['name'],
+            'code' => $inputs['code'],
+            'is_active' => $inputs['is_active'],
+            'flag_url' => $inputs['flag_url'],
         ]);
 
         return setApiResponse('success', 'created', 'Language');
@@ -69,9 +70,10 @@ class Language extends Processor
         }
 
         $Language->update([
-            'language_name' => $inputs['language_name'],
-            'language_code' => $inputs['language_code'],
-            'language_status' => $inputs['language_status'],
+            'name' => $inputs['name'],
+            'code' => $inputs['code'],
+            'is_active' => $inputs['is_active'],
+            'flag_url' => $inputs['flag_url'],
         ]);
 
         return setApiResponse('success', 'updated', 'Language');
