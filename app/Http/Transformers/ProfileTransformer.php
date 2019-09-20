@@ -87,8 +87,8 @@ class ProfileTransformer extends TransformerAbstract
         {
             $item[] = [
                 'id' => $expertise->uuid ?? '',
-                'name' => $expertise->expertise_name ?? '',
-                'status' => $expertise->expertise_status ?? '',
+                'name' => $expertise->name ?? '',
+                'is_active' => $expertise->status == 1,
                     //'language_code' => $user->expertises()->where('language_type','=',1)->value('language_code') ?? '',
             ];
         }

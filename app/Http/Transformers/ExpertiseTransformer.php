@@ -13,10 +13,10 @@ class ExpertiseTransformer extends TransformerAbstract
     public function transform(ExpertiseModel $expertise)
     {
         return [
-            'expertise_id' => $expertise->uuid,
-            'expertise_name' => $expertise->expertise_name,
+            'id' => $expertise->uuid,
+            'name' => $expertise->name,
             'fee_rate' => $this->fee($expertise),
-            'expertise_status' => $expertise->expertise_status,
+            'is_active' => $expertise->is_active == 1 ? true : false,
             'created_at' => $expertise->created_at->format('c'),
             'updated_at' => $expertise->created_at->format('c'),
         ];

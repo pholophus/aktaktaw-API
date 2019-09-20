@@ -10,15 +10,15 @@ class Expertise extends Validator
 
     public function onCreate()
     {
-        $this->rules['expertise_name'] = ['required']; 
+        $this->rules['name'] = ['required']; 
         $this->rules['fee_rate'] = ['required'];      
     }
 
     public function onUpdate()
     {
         $this->rules['fee_rate'] = ['required'];      
-        $this->rules['expertise_name'] = ['required'];
-        $this->rules['expertise_status'] = ['required'];
+        $this->rules['name'] = ['required'];
+        $this->rules['is_active'] = ['required'];
 
     }
 
