@@ -21,7 +21,7 @@ class UserTransformer extends TransformerAbstract
             'is_new' => $user->is_new ?? '',
             'role' => $this->roles($user) ?? '',
             'profile' =>  $this->profile($user) ?? '',
-            'wallet' => $this->wallet($user) ?? '',
+            'wallet' => $this->wallet($user),
             'social_google_id' => $this->google($user) ?? '',
             'social_facebook_id' => $this->facebook($user) ?? '',
             'created_at' => $user->created_at->format('c'),
@@ -43,17 +43,14 @@ class UserTransformer extends TransformerAbstract
 
     public function wallet(UserModel $user)
     {
-        $type = '';
-        //dd($user->wallet);
         $type = $user->wallet->type == 0 ? 'prepaid' : 'postpaid';
 
-        $item[] = [
+        return [
             'id' => $user->wallet->uuid,
             'amount' => $user->wallet->amount,
-            'type' => $type ?? '',
-            'status' => $user->wallet->status,
+            'type' => $type,
+            'is_active' => $user->wallet->is_active,
         ];
-        return $item;
     }
 
     public function google(UserModel $user)

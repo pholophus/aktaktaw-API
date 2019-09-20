@@ -35,21 +35,12 @@ class ProfileTransformer extends TransformerAbstract
 
     public function wallet(UserModel $user)
     {
-        $type = '';
-
-        if($user->wallet->type == 0){
-            $type = 'prepaid';
-        }else{
-            $type = 'postpaid';
-        }
-
-        $item[] = [
-            'id' => $user->wallet->uuid ?? '',
-            'amount' => $user->wallet->amount ?? '',
-            'type' => $type ?? '',
-            'status' => $user->wallet->status ?? '',
+        return [
+            'id' => $user->wallet->uuid,
+            'amount' => $user->wallet->amount ?? 0,
+            'type' => $user->wallet->type == 0 ? 'prepaid' : 'postpaid',
+            'is_active' => $user->wallet->is_active == 1,
         ];
-        return $item;
     }
 
     public function languages(UserModel $user)
@@ -126,11 +117,9 @@ class ProfileTransformer extends TransformerAbstract
         {
             foreach($bookings as $booking)
             {
-                $type = $booking->booking_type == 0 ?'pre-booking' : 'on-demand';
-
                 $item[] = [
                     'id' => $booking->uuid ?? '',
-                    'type' => $type,
+                    'type' => $booking->booking_type == 0 ?'pre-booking' : 'on-demand',
                 ];
             }
         }
