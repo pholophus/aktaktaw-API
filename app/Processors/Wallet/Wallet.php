@@ -2,6 +2,7 @@
 
 namespace App\Processors\Wallet;
 
+use DB;
 use Carbon\Carbon;
 use App\Models\Wallet as WalletModel;
 
@@ -23,15 +24,12 @@ class Wallet extends Processor
     }
 
     public function index($listener){
-        // if(!checkUserAccess('management'))
-        //     return setApiResponse('error','access');
-
         $wallet = WalletModel::latest()->paginate(15);
         return $listener->showWalletListing($wallet);
     }
 
 
-    public function show($listener,$walletUuid)
+    public function show($listener, $walletUuid)
     {
         //$id =  auth()->user()->id;
          if(!$walletUuid){
@@ -39,7 +37,7 @@ class Wallet extends Processor
          }
          try {
             //$wallet = WalletModel::where('user_id','=',$id)->firstorfail();
-            $wallet = WalletModel::where('uuid',$walletUuid)->firstorfail();
+            $wallet = WalletModel::where('uuid', $walletUuid)->firstorfail();
          } catch(ModelNotFoundException $e) {
              return $listener->walletDoesNotExistsError();
          }
@@ -59,8 +57,8 @@ class Wallet extends Processor
 
          $wallet->update([
              'amount' => $inputs['amount'],
-             'type' => $inputs['wallet_type'],
-             'status' => $inputs['wallet_status'],
+             'type' => $inputs['type'],
+             'is_active' => $inputs['is_active'],
          ]);
 
          return setApiResponse('success', 'updated', 'wallet');
@@ -69,37 +67,37 @@ class Wallet extends Processor
     // user wallet
 
     public function showUserWallet($listener){
+        
         $id =  auth()->user()->id;
-        $uuid = WalletModel::where('user_id','=',$id)->value('uuid');
+
         try {
-            $wallet = WalletModel::where('uuid','=',$uuid)->firstorfail();
+            $wallet = WalletModel::where('user_id', $id)->firstorfail();
         } catch(ModelNotFoundException $e) {
             return $listener->walletDoesNotExistsError();
         }
+
         return $listener->showWallet($wallet);
     }
 
     public function updateUserWallet($listener, array $inputs)
     {
-        
-        //use validator when retrieving input
         $validator = $this->validator->on('update')->with($inputs);
         if ($validator->fails()) {
             throw new UpdateFailed('Could not update wallet', $validator->errors());
         }
 
-        //$wallet = auth()->user()->wallet();
-
         $id =  auth()->user()->id;
-         try{
-            $wallet = WalletModel::where('user_id','=',$id)->firstorfail();
-        }catch(ModelNotFoundException $e) {
+        
+        try {
+            $wallet = WalletModel::where('user_id', $id)->firstorfail();
+        } catch(ModelNotFoundException $e) {
             return $listener->walletDoesNotExistsError();
-         }
+        }
+
         $wallet->update([
             'amount' => $inputs['amount'],
-            'type' => $inputs['wallet_type'],
-            'status' => $inputs['wallet_status'],
+            'type' => $inputs['type'],
+            'is_active' => $inputs['is_active'],
         ]);
 
         return setApiResponse('success','updated','wallet');

@@ -14,25 +14,23 @@ class WalletTransformer extends TransformerAbstract
     {
         return [
             'wallet_id' => $wallet->uuid,
-            'user_id' => $wallet->user->uuid,
+            'user' => $this->user($wallet),
             'amount' => $wallet->amount,
-            'wallet_type' => $this->wallet($wallet),
-            'wallet_status' => $wallet->status,
+            'type' => $wallet->type == 0 ? 'prepaid' : 'postpaid',
+            'is_active' => $wallet->is_active == 1,
             'created_at' => $wallet->created_at->format('c'),
             'updated_at' => $wallet->created_at->format('c'),
         ];
     }
 
-    public function wallet(WalletModel $wallet)
+    public function user(WalletModel $wallet)
     {
-        $type = '';
-
-            if($wallet->type == 0){
-                $type = 'prepaid';
-            }else{
-                $type = 'postpaid';
-            }
+        $user = $wallet->user;
         
-            return $type;
+        return [
+            'user_id' => $user->uuid,
+            'name' => $user->name,
+            'email' => $user->email,
+        ];
     }
 }

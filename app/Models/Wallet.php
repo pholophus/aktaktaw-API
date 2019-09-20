@@ -9,7 +9,7 @@ class Wallet extends Model
     protected $table = 'wallets';
 
     protected $fillable = [
-        'user_id','amount','type','status'
+        'user_id','amount','type','is_active'
     ];
 
     public function user(){
