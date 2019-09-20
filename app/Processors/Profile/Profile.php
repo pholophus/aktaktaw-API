@@ -85,16 +85,16 @@ class Profile extends Processor
                 $user = auth()->user();
 
                 $user->update([
-                    'translator_status_id' => $inputs['translator_status'],
+                    'translator_status' => $inputs['translator_status'],
                     'is_new' => $inputs['is_new']
                 ]);
 
                 $id = auth()->user()->id;
 
-                $user->languages()->where('user_id',$id)->sync([
+                $user->languages()->update([
+                    'user_id' => $id,
                     'language_id' => $language->id,
-                    'language_type' => $language->language_type,
-
+                    'language_type' => $inputs['language_type'],
                 ]);
 
                 $user->expertises()->where('user_id',$id)->sync([
@@ -129,15 +129,17 @@ class Profile extends Processor
                 $user = auth()->user();
 
                 $user->update([
-                    'translator_status_id' => $inputs['translator_status'],
+                    'translator_status' => $inputs['translator_status'],
                     'is_new' => $inputs['is_new']
                 ]);
 
                 $id = auth()->user()->id;
+                //dd($language);
 
-                $user->languages()->where('user_id',$id)->sync([
+                $user->languages()->update([
+                    'user_id' => $id,
                     'language_id' => $language->id,
-                    'language_type' => $language->language_type,
+                    'language_type' => $inputs['language_type'],
                 ]);
 
             }
@@ -209,7 +211,7 @@ class Profile extends Processor
             'password' => bcrypt($password),
         ]);
         
-        return setApiResponse('success','updated','');
+        return setApiResponse('success','updated','password');
     }
 
 }

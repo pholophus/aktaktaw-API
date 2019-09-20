@@ -16,17 +16,25 @@ class FeeSeeder extends Seeder
         \Eloquent::reguard();
         $this->command->info('Fee Seed');
 
+        $names = [
+           'minimum',
+           'extra',
+           'additional'
+        ];
 
-        for ($i=0; $i<7; $i++) {
+
+        $i=0;
+        foreach ($names as $name) {
                 $arrX = array(1,5,10);
                 $fee  = \App\Models\Fee::updateOrCreate([
-                    'fee_name' => $faker->word,
+                    'fee_name' => $name,
                     'fee_duration' => rand(5,60),
                     'fee_rate' => $arrX[array_rand($arrX)],
                     'fee_status' => rand(0,1),
                 ]);
 
                 $fee->expertises()->attach($fee);
+                $i++;
         }
     }
 }

@@ -79,9 +79,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Booking::class,'origin_id','id');
     }
-    public function roles(){
-        return $this->belongsToMany(Role::class,'model_has_roles','model_id','role_id');
-    }
+    // public function roles(){
+    //     return $this->belongsToMany(Role::class,'model_has_roles','model_id','role_id');
+    // }
     // public function expertise(){
     //     return $this->belongsToMany(Expertise::class,'user_expertises','user_id', 'expertise_id');
     // }
