@@ -22,10 +22,18 @@ class BookingController extends Controller
         return $processor->store($this, Input::all());
     }
 
-    public function update(BookingProcessor $processor,$BookingUuid)
-    {
-        return $processor->update($this, $BookingUuid, Input::all());
+    public function addTranslator(BookingProcessor $processor, $bookingUuid) {
+        return $processor->addTranslator($this, $bookingUuid, Input::all());
     }
+
+    public function endBooking(BookingProcessor $processor, $bookingUuid) {
+        return $processor->endBooking($this, $bookingUuid, Input::all());
+    }
+
+    // public function update(BookingProcessor $processor,$BookingUuid)
+    // {
+    //     return $processor->update($this, $BookingUuid, Input::all());
+    // }
 
     public function destroy(BookingProcessor $processor, $BookingUuid)
     {

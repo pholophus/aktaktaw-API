@@ -4,6 +4,7 @@ namespace App\Http\Transformers;
 
 use App\Concerns\Formatter;
 use App\Models\Booking as BookingModel;
+use App\Models\Language as LanguageModel;
 use League\Fractal\TransformerAbstract;
 
 class BookingTransformer extends TransformerAbstract
@@ -14,19 +15,18 @@ class BookingTransformer extends TransformerAbstract
     {
         return [
             'id' => $booking->uuid,
-            'booking_type' => $booking->booking_type ?? '',
+            'type' => $booking->type,
+            'status' => $booking->status,
            // 'origin' => $booking->origin,
-            'booking_date' => $booking->booking_date ?? '',
-            'booking_time' => $booking->booking_time ?? '',
-            'call_duration' => $booking->call_duration ?? '',
-            'end_call' => $booking->end_call ?? '',  
+            'start_call_at' => $booking->start_call_at->format('c'),
+            'end_call_at' => $booking->end_call_at ? $booking->end_call_at->format('c') : '', 
             'notes' => $booking->notes ?? '',
-            'booking_fee' => $booking->booking_fee ?? '',
-            'booking_status' => $booking->booking_status ?? '',
+            // 'booking_fee' => $booking->booking_fee ?? '',
             'created_by' => $this->creator($booking) ?? '',
             'request_by' => $this->requester($booking) ?? '',
-            'translator_id' => $this->translator($booking) ?? '',
-            'language_id' => $this->language($booking) ?? '',
+            'translator' => $booking->translator ? $this->translator($booking) : '',
+            'requested_language' => $booking->requested_language_id ? $this->language($booking->request_language) : '',
+            'spoken_language' => $booking->spoken_language_id ? $this->language($booking->spoken_language) : '',
             'expertise' => $this->expertise($booking) ?? '',
             'created_at' => $booking->created_at->format('c'),
             'updated_at' => $booking->created_at->format('c'),
@@ -35,27 +35,22 @@ class BookingTransformer extends TransformerAbstract
 
     public function translator(BookingModel $booking)
     {
-        $id = $booking->translator_id;
-        $translator = $booking->user->where('id',$id)->first();
-//dd($translator->uuid);
-            $item[] = [
-                'id' => $translator->uuid ?? '',
-                'name' => $translator->profile->name ?? '' ,
-            ];
- 
-        return $item;
+        $translator = $booking->translator;
+        return [
+            'id' => $translator->uuid,
+            'name' => $translator->profile->name,
+        ];
     }
+
     public function creator(BookingModel $booking)
     {
         $creator = $booking->user;
         
-        $item [] = [
+        return [
             'id' => $creator->uuid ?? '',
             'name' => $creator->profile->name ?? '' ,
             'role_id' => $creator->roles()->first()->uuid ?? '',
         ];
-        
-        return $item;
     }
 
     public function requester(BookingModel $booking)
@@ -64,7 +59,7 @@ class BookingTransformer extends TransformerAbstract
         //dd($id);
         $requester = $booking->user->where('id',$id)->first();
         //dd($requester);
-        $item [] = [
+        return [
             'id' => $requester->uuid ?? '',
             'name' => $requester->profile->name ?? '' ,
         ];
@@ -75,22 +70,18 @@ class BookingTransformer extends TransformerAbstract
     public function expertise(BookingModel $booking)
     {
         $expertise = $booking->expertise;
-        $item[] = [
+        return [
             'id' => $expertise->uuid ?? '' ,
             'name' => $expertise->expertise_name ?? '' ,
         ];
-
-        return $item;
     }
-    public function language(BookingModel $booking)
-    {
-        $language = $booking->language;
-        $item[] = [
-            'id' => $language->uuid ?? '' ,
-            'name' => $language->language_name ?? '' ,
-        ];
 
-        return $item;
+    public function language(LanguageModel $language)
+    {
+        return [
+            'id' => $language->uuid ?? '' ,
+            'name' => $language->name ?? '' ,
+        ];
     }
 
 
