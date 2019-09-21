@@ -2,6 +2,7 @@
 
 namespace App\Processors\Booking;
 
+use DB;
 use Carbon\Carbon;
 use App\Models\Booking as BookingModel;
 use App\Models\Role as RoleModel;
@@ -52,14 +53,12 @@ class Booking extends Processor
 
     public function store($listener, array $inputs)
     {
-        // if (!checkUserAccess('management'))
-        //     return setApiResponse('error', 'access');
         $validator = $this->validator->on('create')->with($inputs);
         if ($validator->fails()) {
             return $listener->validationFailed($validator->getMessageBag());
         }
 
-        $language = LanguageModel::where('uuid',$inputs['language_id'])->first();
+        $language = LanguageModel::where('uuid', $inputs['requested_language_id'])->first();
         if(!$language){
             return $listener->LanguageDoesNotExistsError();
         }
@@ -69,137 +68,101 @@ class Booking extends Processor
             return $listener->ExpertiseDoesNotExistsError();
         }
        
-        $requester = UserModel::where('uuid',$inputs['requester_id'])->role('general_user')->first();
+        $requester = UserModel::where('uuid', $inputs['requester_id'])->role('general_user')->first();
         if(!$requester){
             return $listener->RequesterDoesNotExistsError();
         }
-
-        if(isset($inputs['translator_id']))
-        {
-            $translator = UserModel::where('uuid',$inputs['translator_id'])->with('roles')->role('translator')->first();
-            if(!$translator){
-                return $listener->TranslatorDoesNotExistsError();
-            }
-
-            //check whether the translator has the expertise
-            $hasExpertises = $translator->expertises->where('id',$expertise->id)->first();
-            if(!$hasExpertises){
-                return $listener->TranslatorDoesNotHaveThisExpertiseError();
-            }
-
-            //check whether the translator has the language
-            $hasLanguages = $translator->languages->where('id',$language->id)->first();
-            if(!$hasLanguages){
-            return $listener->TranslatorDoesNotHaveThisLanguageError();
-            }
-
-        }
-        else{
-
-            $translator = UserModel::whereHas('languages', function($q) use($language) {
-            $q->where('language_id', $language->id);
-            })->whereHas('expertises', function($q) use ($expertise){
-            $q->where('expertise_id', $expertise->id);
-            })->where('translator_status',1)->orderBy('booked','asc')->first();
-
-            if(!$translator){
-                return $listener->BookingError();
-            }
-
-        }
   
-       // $origin = auth()->user()->role('administrator') ? 'admin' : 'user';
-        
-        BookingModel::create([
-            'booking_date' =>  $inputs['booking_date'],
-            'booking_time' =>  $inputs['booking_time'],
-            'booking_type' => $inputs['booking_type'],
-            'booking_status' => $inputs['booking_status'],
-            'end_call' =>  $inputs['end_call'],
-            'call_duration' => $inputs['call_duration'],
+        // $origin = auth()->user()->role('administrator') ? 'admin' : 'user';
+
+        $booking = BookingModel::create([
+            'start_call_at' =>  Carbon::parse($inputs['start_call'])->toDateTimeString(),
+            'type' => $inputs['type'],
             'notes' =>  $inputs['notes'],
+            'status' => 'pending',
             'origin_id' => auth()->user()->id,
-            'booking_fee' => $inputs['booking_fee'],
-            'translator_id' =>$translator->id,
-            'language_id'=> $language->id,
+            'requested_language_id'=> $language->id,
             'expertise_id'=> $expertise->id, 
             'requester_id'=> $requester->id,
 
         ]);
 
-         $translator->increment('booked',1);
+        // $translator->increment('booked', 1);
 
-        return setApiResponse('success', 'created', 'booking');
+        return $listener->showBooking($booking);
     }
 
-    public function update($listener, $bookingUuid, array $inputs)
-    {
-        // if (!checkUserAccess('management'))
-        //     return setApiResponse('error', 'access');
-        //use validator when retrieving input
-        $validator = $this->validator->on('update')->with($inputs);
-        if ($validator->fails()) {
-            throw new UpdateFailed('Could not update booking', $validator->errors());
-        }
+    /**
+     * Add translator to booking
+     */
+    public function addTranslator($listener, $bookingUuid, array $inputs) {
+        
         try {
             $booking = BookingModel::where('uuid', $bookingUuid)->firstorfail();
         } catch (ModelNotFoundException $e) {
             return $listener->bookingDoesNotExistsError();
         }
 
-        $language = LanguageModel::where('id',$booking->language_id)->first();  
-        $expertise = ExpertiseModel::where('id',$booking->expertise_id)->first();
-
-        if(isset($inputs['translator_id']))
-        {   
-            //dd($language);
-            $translator = UserModel::where('uuid',$inputs['translator_id'])->with('roles')->role('translator')->first();
-            if(!$translator){
-                return $listener->TranslatorDoesNotExistsError();
-            }
-
-            //check whether the translator has the expertise
-            $hasExpertises = $translator->expertises->where('id',$expertise->id)->first();
-            if(!$hasExpertises){
-                return $listener->TranslatorDoesNotHaveThisExpertiseError();
-            }
-            
-            //check whether the translator has the language
-            $hasLanguages = $translator->languages->where('id',$language->id)->first();
-            if(!$hasLanguages){
-            return $listener->TranslatorDoesNotHaveThisLanguageError();
-            }
-
+        $validator = $this->validator->on('translator')->with($inputs);
+        if ($validator->fails()) {
+            throw new UpdateFailed('Missing translator ID', $validator->errors());
         }
-        else{
 
-            $translator = UserModel::whereHas('languages', function($q) use($language) {
-            $q->where('language_id', $language->id);
-            })->whereHas('expertises', function($q) use ($expertise){
-            $q->where('expertise_id', $expertise->id);
-            })->where('translator_status',1)->orderBy('booked','asc')->first();
+        $language = LanguageModel::where('uuid',$inputs['spoken_language_id'])->first();
+        if(!$language){
+            return $listener->LanguageDoesNotExistsError();
+        }
 
-            if(!$translator){
-                return $listener->BookingError();
-            }
+        $translator = UserModel::where('uuid', $inputs['translator_id'])->with('roles')->role('translator')->first();
+        if(!$translator){
+            return $listener->TranslatorDoesNotExistsError();
+        }
+        
+        //check whether the translator has the expertise
+        // $hasExpertises = $translator->expertises->where('id', $expertise->id)->first();
+        // if(!$hasExpertises){
+        //     return $listener->TranslatorDoesNotHaveThisExpertiseError();
+        // }
 
+        //check whether the translator has the language
+        // $hasLanguages = $translator->languages->where('id', $language->id)->first();
+        // if(!$hasLanguages){
+        //     return $listener->TranslatorDoesNotHaveThisLanguageError();
+        // }
+
+        $booking->update([
+            'translator_id' => $translator->id,
+            'spoken_language_id' => $language->id,
+            'status' => 'open'
+        ]);
+
+        return $listener->showBooking($booking);
+    }
+
+    /**
+     * Add translator to booking
+     */
+    public function endBooking($listener, $bookingUuid, array $inputs) {
+        
+        try {
+            $booking = BookingModel::where('uuid', $bookingUuid)->firstorfail();
+        } catch (ModelNotFoundException $e) {
+            return $listener->bookingDoesNotExistsError();
+        }
+
+        $validator = $this->validator->on('callingEnd')->with($inputs);
+        if ($validator->fails()) {
+            throw new UpdateFailed('Missing end date time', $validator->errors());
         }
 
         $booking->update([
-            //'origin' =>  $inputs['origin'],
-            'booking_date' =>  $inputs['booking_date'],
-            'booking_time' =>  $inputs['booking_time'],
-            'booking_fee' => $inputs['booking_fee'],
-            'translator_id' =>$translator->id,
-            'booking_status' => $inputs['booking_status'],
-            'call_duration' =>  $inputs['call_duration'],
-            'end_call' =>  $inputs['end_call'],
-            'notes' =>  $inputs['notes'],
+            'end_call_at' => Carbon::parse($inputs['end_call'])->toDateTimeString(),
+            'status' => 'close'
         ]);
-        $translator->increment('booked',1);
 
-        return setApiResponse('success', 'updated', 'booking');
+        return $listener->showBooking($booking);
     }
+
     public function delete($listener, $bookingUuid)
     {
         // if (!checkUserAccess('management'))
