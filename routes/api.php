@@ -86,7 +86,8 @@ $api->version('v1', function ($api) {
             $api->get('/', 'BookingController@index');
             $api->get('/{id}', 'BookingController@show');
             $api->post('/', 'BookingController@store');
-            $api->put('/{id}', 'BookingController@update');
+            $api->post('/{id}/translator', 'BookingController@addTranslator');
+            $api->post('/{id}/end', 'BookingController@endBooking');
             $api->delete('/{id}', 'BookingController@destroy');
         });
 
