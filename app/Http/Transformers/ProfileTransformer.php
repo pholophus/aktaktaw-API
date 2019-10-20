@@ -18,6 +18,7 @@ class ProfileTransformer extends TransformerAbstract
             'name' => $user->profile->name ?? '',
             'email' => $user->email ?? '',
             'phone_no' => $user->profile->phone_no ?? '',
+            'country' => $user->country ?? '',
             'languages' => $this->languages($user) ?? '',
             'avatar_file_path' => $user->profile->avatar_file_path ?? '',
             'resume_file_path' => $user->profile->resume_file_path ?? '',
