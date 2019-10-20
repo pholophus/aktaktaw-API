@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder
         foreach ($roles as $role) {
             //foreach ($expertises as $expertise) {
                 for ($i = 0; $i < 10; $i++) {
-                    $name = $faker->name;
+                    $name = $faker->company;
                     $temp = explode(' ', trim($name));
                     $nickname = $temp[0];
 
