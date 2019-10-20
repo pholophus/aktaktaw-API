@@ -11,6 +11,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+
         $faker = \Faker\Factory::create('ms_MY');
         ini_set('memory_limit', '50G');
         \Eloquent::reguard();
@@ -60,7 +61,7 @@ class UsersTableSeeder extends Seeder
                     if($user->hasRole('translator')) 
                     {
                         $profile = \App\Models\Profile::updateOrCreate([
-                            'name' => $faker->name,
+                            'name' => $faker->company,
                             'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
                             'avatar_file_path' => asset('uploads/defaultpicture.png'),
                             'resume_file_path' =>  asset('uploads/dummy.pdf'),
@@ -93,7 +94,7 @@ class UsersTableSeeder extends Seeder
                     else
                     {
                         $profile = \App\Models\Profile::updateOrCreate([
-                            'name' => $faker->name,
+                            'name' => $faker->company,
                             'phone_no'=> cleanPhoneNumber($faker->phoneNumber),
                             'avatar_file_path' => asset('uploads/defaultpicture.png'),
                             'user_id' => $user->id,
