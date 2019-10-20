@@ -30,8 +30,6 @@ class AuthController extends Controller
         ]);
     }
 
-
-
     public function accountAuthenticated($token)
     {
         return $this->response->array(['data' => [

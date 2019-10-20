@@ -99,5 +99,23 @@ $api->version('v1', function ($api) {
             $api->put('/{id}', 'FeeController@update');
             $api->delete('/{id}', 'FeeController@destroy');
         });
+
+        //LOC/
+        $api->group(['prefix' => 'loc', 'namespace' => 'Loc'], function ($api) {
+            $api->get('/', 'LocController@index');
+            $api->get('/{id}', 'LocController@show');
+            $api->post('/', 'LocController@store');
+            $api->put('/{id}', 'LocController@update');
+            $api->delete('/{id}', 'LocController@destroy');
+        });
+
+        //LOC/
+        $api->group(['prefix' => 'investor', 'namespace' => 'Investor'], function ($api) {
+            $api->get('/', 'InvestorController@index');
+            $api->get('/{id}', 'InvestorController@show');
+            $api->post('/', 'InvestorController@store');
+            $api->put('/{id}', 'InvestorController@update');
+            $api->delete('/{id}', 'InvestorController@destroy');
+        });
     });
 });

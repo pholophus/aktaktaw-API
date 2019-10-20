@@ -19,6 +19,15 @@ class UsersTableSeeder extends Seeder
         $roles = \App\Models\Role::all();
         $expertises = \App\Models\Expertise::all();
 
+        $countries = [
+            'Malaysia',
+            'China',
+            'Vietnam',
+            'Myammar',
+            'Nepal',
+            'India'
+        ];
+
         foreach ($roles as $role) {
             //foreach ($expertises as $expertise) {
                 for ($i = 0; $i < 10; $i++) {
@@ -36,11 +45,12 @@ class UsersTableSeeder extends Seeder
                         'user_status' => rand(0,1),
                         'translator_status' => rand(0,2),
                         'is_new' => rand(0,1),
+                        'country' => $countries[rand(0, 4)],
                     ]);
 
                     $wallet = \App\Models\Wallet::updateOrCreate([
                         'user_id' => $user->id,
-                        'amount' => rand(1,20),
+                        'amount' => rand(1,1000),
                     ]);
 
                     if(!$user->hasRole($role)) {

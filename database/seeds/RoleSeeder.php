@@ -13,9 +13,8 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             'administrator',
-            'staff',
-            'general_user',
-            'translator'
+            'company',
+            'investor'
 
         ];
         $this->command->info('Seeding Roles');

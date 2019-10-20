@@ -24,6 +24,7 @@ class UserTransformer extends TransformerAbstract
             'wallet' => $this->wallet($user),
             'social_google_id' => $this->google($user) ?? '',
             'social_facebook_id' => $this->facebook($user) ?? '',
+            'country' => $user->country ?? '',
             'created_at' => $user->created_at->format('c'),
             'updated_at' => $user->created_at->format('c'),
         ];

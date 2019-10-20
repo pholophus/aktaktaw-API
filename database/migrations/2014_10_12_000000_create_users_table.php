@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->integer('user_status')->default(0);
             $table->integer('translator_status')->default(0);
             $table->integer('booked')->default(0);
+            $table->string('country');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

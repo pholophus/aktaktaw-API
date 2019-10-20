@@ -33,7 +33,8 @@ class Kernel
             \App\Models\Media::class,
             \App\Models\Wallet::class,
             \App\Models\Fee::class,
-
+            \App\Models\Loc::class,
+            \App\Models\Investor::class,
         ],
     ];
 
