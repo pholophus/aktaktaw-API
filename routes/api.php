@@ -100,14 +100,7 @@ $api->version('v1', function ($api) {
             $api->delete('/{id}', 'FeeController@destroy');
         });
 
-        //LOC/
-        $api->group(['prefix' => 'loc', 'namespace' => 'Loc'], function ($api) {
-            $api->get('/', 'LocController@index');
-            $api->get('/{id}', 'LocController@show');
-            $api->post('/', 'LocController@store');
-            $api->put('/{id}', 'LocController@update');
-            $api->delete('/{id}', 'LocController@destroy');
-        });
+        
 
         //LOC/
         $api->group(['prefix' => 'investor', 'namespace' => 'Investor'], function ($api) {
